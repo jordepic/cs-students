@@ -1,5 +1,8 @@
 import React, {Component} from 'react';
 import 'bootstrap/dist/css/bootstrap.css'
+import Navbar from './navbar'
+import firebase from "firebase/app";
+import "firebase/auth";
 
 class LoginForm extends Component {
   state = {
@@ -20,20 +23,20 @@ class LoginForm extends Component {
   }
 
   handleRegistration() {
-    const {username, password} = this.state
-    // firebase.auth().createUserWithEmailAndPassword(username, password).catch(function(error) {
-    //    Handle Errors here.
-    //   var errorCode = error.code;
-    //   var errorMessage = error.message;
-    // });
+    let username = this.state.username
+    let password = this.state.password
+    console.log(username)
+    console.log(password)
+    firebase.auth().createUserWithEmailAndPassword(username, password).catch(function(error) {
+      var errorCode = error.code;
+      var errorMessage = error.message;
+      console.log(errorMessage)
+    });
   }
 
   render() {
     return (<div>
-      <nav class="navbar navbar-expand-sm bg-dark navbar-dark">
-        <a class="navbar-brand" href="#">Externships</a>
-      </nav>
-
+      <Navbar/>
       <h3 className="text-center">Create an account for available externships!</h3>
 
       <form>
@@ -46,8 +49,10 @@ class LoginForm extends Component {
         </div>
 
         <br/>
+        <div className="text-center">
+          <button className="btn btn-dark btn-lg" onClick={this.handleRegistration}>Register</button>
+        </div>
 
-        <button className="btn btn-dark" onClick={this.handleRegistration}>Register</button>
       </form>
     </div>);
   }
