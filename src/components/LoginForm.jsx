@@ -20,13 +20,6 @@ class LoginForm extends Component {
   }
 
   handleUserInfoChange(event) {
-    // this.setState(prevState => {
-    //   return {
-    //     [event.target.name]: event.target.value,
-    //     student: true,
-    //     registration: true
-    //   }
-    // })
     const { student, registration } = this.state;
     this.setState({
       [event.target.name]: event.target.value,
