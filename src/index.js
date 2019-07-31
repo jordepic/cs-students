@@ -1,6 +1,6 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
-import LoginForm from './loginform'
+import App from './App'
 import * as firebase from 'firebase';
 
 var firebaseConfig = {
@@ -14,4 +14,4 @@ var firebaseConfig = {
 }
 firebase.initializeApp(firebaseConfig);
 
-ReactDOM.render(<LoginForm/>, document.getElementById("auth"))
+ReactDOM.render(<App />, document.getElementById("auth"))

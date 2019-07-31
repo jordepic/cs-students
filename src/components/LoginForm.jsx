@@ -1,6 +1,5 @@
 import React, {Component} from 'react';
-import 'bootstrap/dist/css/bootstrap.css'
-import Navbar from './navbar'
+import Navbar from './Navbar'
 import firebase from "firebase/app";
 import "firebase/auth";
 
