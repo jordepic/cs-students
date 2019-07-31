@@ -13,16 +13,26 @@ class LoginForm extends Component {
 
   constructor() {
     super();
+    this.userInfoChangeUsername = this.userInfoChangeUsername.bind(this);
+    this.userInfoChangePassword = this.userInfoChangePassword.bind(this);
     this.handleUserInfoChange = this.handleUserInfoChange.bind(this);
     this.handleRegistration = this.handleRegistration.bind(this);
     this.handleButtonSwitch = this.handleButtonSwitch.bind(this);
     this.handleUserSwitch = this.handleUserSwitch.bind(this);
   }
 
-  handleUserInfoChange(event) {
+  userInfoChangeUsername = () => {
+    this.handleUserInfoChange("username");
+  };
+
+  userInfoChangePassword = () => {
+    this.handleUserInfoChange("password");
+  };
+
+  handleUserInfoChange(field) {
     this.setState(prevState => {
       return {
-        [event.target.name]: event.target.value,
+        field,
         student: prevState.student,
         registration: prevState.registration
       };
@@ -79,7 +89,7 @@ class LoginForm extends Component {
           <Form>
             <Form.Group controlId="form_username">
               <Form.Control
-                onChange={this.handleUserInfoChange}
+                onChange={this.userInfoChangeUsername}
                 name="username"
                 type="text"
                 placeholder="Username"
@@ -88,7 +98,7 @@ class LoginForm extends Component {
 
             <Form.Group controlId="form_password">
               <Form.Control
-                onChange={this.handleUserInfoChange}
+                onChange={this.userInfoChangePassword}
                 name="password"
                 type="password"
                 placeholder="Password"
