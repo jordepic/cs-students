@@ -15,29 +15,30 @@ class LoginForm extends Component {
     super();
     this.userInfoChangeUsername = this.userInfoChangeUsername.bind(this);
     this.userInfoChangePassword = this.userInfoChangePassword.bind(this);
-    this.handleUserInfoChange = this.handleUserInfoChange.bind(this);
     this.handleRegistration = this.handleRegistration.bind(this);
     this.handleButtonSwitch = this.handleButtonSwitch.bind(this);
     this.handleUserSwitch = this.handleUserSwitch.bind(this);
   }
 
-  userInfoChangeUsername = () => {
-    this.handleUserInfoChange("username");
-  };
-
-  userInfoChangePassword = () => {
-    this.handleUserInfoChange("password");
-  };
-
-  handleUserInfoChange(field) {
+  userInfoChangeUsername = event => {
     this.setState(prevState => {
       return {
-        field,
+        username: "TODO",
         student: prevState.student,
         registration: prevState.registration
       };
     });
-  }
+  };
+
+  userInfoChangePassword = () => {
+    this.setState(prevState => {
+      return {
+        password: "TODO",
+        student: prevState.student,
+        registration: prevState.registration
+      };
+    });
+  };
 
   handleRegistration() {
     let username = this.state.username;
@@ -76,7 +77,7 @@ class LoginForm extends Component {
 
   render() {
     return (
-      <Container>
+      <Container fluid={true}>
         <Row>
           <h3 className="text-center">
             {this.state.student
