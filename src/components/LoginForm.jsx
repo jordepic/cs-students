@@ -13,32 +13,27 @@ class LoginForm extends Component {
 
   constructor() {
     super();
-    this.userInfoChangeUsername = this.userInfoChangeUsername.bind(this);
-    this.userInfoChangePassword = this.userInfoChangePassword.bind(this);
+    this.handleUserInfoChange = this.handleUserInfoChange.bind(this);
     this.handleRegistration = this.handleRegistration.bind(this);
     this.handleButtonSwitch = this.handleButtonSwitch.bind(this);
     this.handleUserSwitch = this.handleUserSwitch.bind(this);
   }
 
-  userInfoChangeUsername = event => {
-    this.setState(prevState => {
-      return {
-        username: "TODO",
-        student: prevState.student,
-        registration: prevState.registration
-      };
+  handleUserInfoChange(event) {
+    // this.setState(prevState => {
+    //   return {
+    //     [event.target.name]: event.target.value,
+    //     student: true,
+    //     registration: true
+    //   }
+    // })
+    const { student, registration } = this.state;
+    this.setState({
+      [event.target.name]: event.target.value,
+      student: student,
+      registration: registration
     });
-  };
-
-  userInfoChangePassword = () => {
-    this.setState(prevState => {
-      return {
-        password: "TODO",
-        student: prevState.student,
-        registration: prevState.registration
-      };
-    });
-  };
+  }
 
   handleRegistration() {
     let username = this.state.username;
@@ -90,7 +85,7 @@ class LoginForm extends Component {
           <Form>
             <Form.Group controlId="form_username">
               <Form.Control
-                onChange={this.userInfoChangeUsername}
+                onChange={event => this.handleUserInfoChange(event)}
                 name="username"
                 type="text"
                 placeholder="Username"
@@ -99,7 +94,7 @@ class LoginForm extends Component {
 
             <Form.Group controlId="form_password">
               <Form.Control
-                onChange={this.userInfoChangePassword}
+                onChange={event => this.handleUserInfoChange(event)}
                 name="password"
                 type="password"
                 placeholder="Password"
