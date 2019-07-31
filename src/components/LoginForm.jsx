@@ -1,7 +1,9 @@
 import React, {Component} from 'react';
-import Navbar from './Navbar'
 import firebase from "firebase/app";
 import "firebase/auth";
+import { Form, Button } from 'react-bootstrap'
+
+
 
 class LoginForm extends Component {
   state = {
@@ -64,10 +66,6 @@ class LoginForm extends Component {
 
   render() {
     return (<div>
-      <Navbar/>
-
-      <br/>
-
       <h3 className="text-center">{
           this.state.student
             ? "Find your externship today!"
@@ -76,45 +74,38 @@ class LoginForm extends Component {
 
       <br/>
 
-      <form>
-        <div className="form-group">
-          <input type="text" name="username" placeholder="Username" className="form-control" onChange={this.handleUserInfoChange}/>
-        </div>
+      <Form>
+        <Form.Group controlId="form_username">
+          <Form.Control onChange={this.handleUserInfoChange} name="username" type="text" placeholder="Username" />
+        </Form.Group>
 
-        <div className="form-group">
-          <input type="text" name="password" placeholder="Password" className="form-control" onChange={this.handleUserInfoChange}/>
-        </div>
+        <Form.Group controlId="form_password">
+          <Form.Control onChange={this.handleUserInfoChange} name="password" type="password" placeholder="Password" />
+        </Form.Group> 
+        
+        <Button variant="primary" type="submit" onClick={this.handleRegistration}>
+          { this.state.registration
+            ? "Register"
+            : "Sign In"
+          }
+        </Button>
+      </Form>
 
-        <br/>
-        <div className="text-center">
-          <button className="btn btn-dark btn-lg" onClick={this.handleRegistration}>{
-              this.state.registration
-                ? "Register"
-                : "Sign In"
-            }</button>
-        </div>
-      </form>
-
-      <br/>
-
-      <div className="text-center">
-        <button className="btn btn-light btn-sm" onClick={this.handleButtonSwitch}>{
+        <Button className="btn btn-light btn-sm" onClick={this.handleButtonSwitch}>{
             this.state.registration
               ? "Have an account?  Sign In."
               : "Don't have an account? Create one now!"
-          }</button>
-      </div>
+          }</Button>
 
-      <br/>
-
-      <div className="text-center">
-        <button className="btn btn-light btn-sm" onClick={this.handleUserSwitch}>{
+        <br />
+        <Button className="btn btn-light btn-sm" onClick={this.handleUserSwitch}>{
             this.state.student
               ? "Looking for employees?"
-              : "Are you a current student?"
-          }</button>
+              : "Are you a current student?" }
+        </Button>
+        
       </div>
-    </div>);
+    );
   }
 }
 

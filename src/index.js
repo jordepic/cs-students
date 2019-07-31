@@ -2,6 +2,7 @@ import React from 'react';
 import ReactDOM from 'react-dom';
 import App from './App'
 import * as firebase from 'firebase';
+import 'bootstrap/dist/css/bootstrap.min.css';
 
 var firebaseConfig = {
   apiKey: "AIzaSyCR_F4Jo8O_Qkz5UZFkmik5VdN9-iYBO-k",
