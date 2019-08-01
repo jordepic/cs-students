@@ -13,7 +13,7 @@ export default class App extends Component {
     email: "",
     password: "",
     student: true,
-    registration: true
+    registration: false
   };
 
   constructor() {
@@ -22,6 +22,22 @@ export default class App extends Component {
     this.handleAuthentication = this.handleAuthentication.bind(this);
     this.handleButtonSwitch = this.handleButtonSwitch.bind(this);
     this.handleUserSwitch = this.handleUserSwitch.bind(this);
+  }
+
+  componentDidMount() {
+    firebase.auth().onAuthStateChanged(function(user) {
+      if (user) {
+        this.setState(prevState => {
+          return {
+            loggedIn: true,
+            email: prevState.email,
+            password: prevState.password,
+            student: prevState.student,
+            registration: prevState.registration
+          };
+        });
+      }
+    });
   }
 
   handleUserInfoChange(event) {
@@ -54,6 +70,15 @@ export default class App extends Component {
           var errorMessage = error.message;
         });
     }
+    this.setState(prevState => {
+      return {
+        loggedIn: true,
+        email: prevState.email,
+        password: prevState.password,
+        student: prevState.student,
+        registration: prevState.registration
+      };
+    });
   }
 
   handleButtonSwitch() {
