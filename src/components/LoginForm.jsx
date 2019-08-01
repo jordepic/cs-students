@@ -5,94 +5,12 @@ import "firebase/database";
 import { Form, Button, Container, Row } from "react-bootstrap";
 
 class LoginForm extends Component {
-  state = {
-    email: "",
-    password: "",
-    student: true,
-    registration: true
-  };
-
-  constructor() {
-    super();
-    this.handleUserInfoChange = this.handleUserInfoChange.bind(this);
-    this.handleAuthentication = this.handleAuthentication.bind(this);
-    this.handleButtonSwitch = this.handleButtonSwitch.bind(this);
-    this.handleUserSwitch = this.handleUserSwitch.bind(this);
-  }
-
-  handleUserInfoChange(event) {
-    const { student, registration } = this.state;
-    this.setState({
-      [event.target.name]: event.target.value,
-      student: student,
-      registration: registration
-    });
-  }
-
-  handleAuthentication() {
-    let email = this.state.email;
-    let password = this.state.password;
-
-    if (this.state.registration) {
-      firebase
-        .auth()
-        .createUserWithEmailAndPassword(email, password)
-        .catch(function(error) {
-          var errorCode = error.code;
-          var errorMessage = error.message;
-        });
-      //Upload user id to realtime database, not working at the moment
-      var database = firebase.database();
-      if (this.state.student) {
-        database
-          .ref()
-          .child("students/" + firebase.auth().currentUser.uid)
-          .set(true);
-      } else {
-        database
-          .ref()
-          .child("employers/" + firebase.auth().currentUser.uid)
-          .set(true);
-      }
-    } else {
-      firebase
-        .auth()
-        .signInWithEmailAndPassword(email, password)
-        .catch(function(error) {
-          var errorCode = error.code;
-          var errorMessage = error.message;
-        });
-    }
-  }
-
-  handleButtonSwitch() {
-    this.setState(prevState => {
-      return {
-        email: prevState.email,
-        password: prevState.password,
-        student: prevState.student,
-        registration: !prevState.registration
-      };
-    });
-  }
-
-  handleUserSwitch() {
-    this.setState(prevState => {
-      return {
-        email: prevState.email,
-        password: prevState.password,
-        student: !prevState.student,
-        registration: prevState.registration
-      };
-    });
-  }
-
   render() {
     return (
       <Container fluid={true}>
         <Row>
           <h3 className="text-center">
-            {this.state.student
+            {this.props.student
               ? "Find your externship today!"
               : "Find motivated STEM students from top schools!"}
           </h3>
@@ -102,7 +20,7 @@ class LoginForm extends Component {
           <Form>
             <Form.Group controlId="form_email">
               <Form.Control
-                onChange={event => this.handleUserInfoChange(event)}
+                onChange={event => this.props.handleUserInfoChange(event)}
                 name="email"
                 type="text"
                 placeholder="email"
@@ -111,7 +29,7 @@ class LoginForm extends Component {
 
             <Form.Group controlId="form_password">
               <Form.Control
-                onChange={event => this.handleUserInfoChange(event)}
+                onChange={event => this.props.handleUserInfoChange(event)}
                 name="password"
                 type="password"
                 placeholder="Password"
@@ -121,9 +39,9 @@ class LoginForm extends Component {
             <Button
               variant="primary"
               type="submit"
-              onClick={this.handleAuthentication}
+              onClick={() => this.props.handleAuthentication()}
             >
-              {this.state.registration ? "Register" : "Sign In"}
+              {this.props.registration ? "Register" : "Sign In"}
             </Button>
           </Form>
         </Row>
@@ -131,9 +49,9 @@ class LoginForm extends Component {
         <Row>
           <Button
             className="btn btn-light btn-sm"
-            onClick={this.handleButtonSwitch}
+            onClick={() => this.props.handleButtonSwitch()}
           >
-            {this.state.registration
+            {this.props.registration
               ? "Have an account?  Sign In."
               : "Don't have an account? Create one now!"}
           </Button>
@@ -142,9 +60,9 @@ class LoginForm extends Component {
         <Row>
           <Button
             className="btn btn-light btn-sm"
-            onClick={this.handleUserSwitch}
+            onClick={() => this.props.handleUserSwitch()}
           >
-            {this.state.student
+            {this.props.student
               ? "Looking for employees?"
               : "Are you a current student?"}
           </Button>
