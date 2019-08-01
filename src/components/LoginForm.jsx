@@ -1,11 +1,12 @@
 import React, { Component } from "react";
 import firebase from "firebase/app";
 import "firebase/auth";
+import "firebase/database";
 import { Form, Button, Container, Row } from "react-bootstrap";
 
 class LoginForm extends Component {
   state = {
-    username: "",
+    email: "",
     password: "",
     student: true,
     registration: true
@@ -14,7 +15,7 @@ class LoginForm extends Component {
   constructor() {
     super();
     this.handleUserInfoChange = this.handleUserInfoChange.bind(this);
-    this.handleRegistration = this.handleRegistration.bind(this);
+    this.handleAuthentication = this.handleAuthentication.bind(this);
     this.handleButtonSwitch = this.handleButtonSwitch.bind(this);
     this.handleUserSwitch = this.handleUserSwitch.bind(this);
   }
@@ -28,23 +29,46 @@ class LoginForm extends Component {
     });
   }
 
-  handleRegistration() {
-    let username = this.state.username;
+  handleAuthentication() {
+    let email = this.state.email;
     let password = this.state.password;
 
-    firebase
-      .auth()
-      .createUserWithEmailAndPassword(username, password)
-      .catch(function(error) {
-        var errorCode = error.code;
-        var errorMessage = error.message;
-      });
+    if (this.state.registration) {
+      firebase
+        .auth()
+        .createUserWithEmailAndPassword(email, password)
+        .catch(function(error) {
+          var errorCode = error.code;
+          var errorMessage = error.message;
+        });
+      //Upload user id to realtime database, not working at the moment
+      var database = firebase.database();
+      if (this.state.student) {
+        database
+          .ref()
+          .child("students/" + firebase.auth().currentUser.uid)
+          .set(true);
+      } else {
+        database
+          .ref()
+          .child("employers/" + firebase.auth().currentUser.uid)
+          .set(true);
+      }
+    } else {
+      firebase
+        .auth()
+        .signInWithEmailAndPassword(email, password)
+        .catch(function(error) {
+          var errorCode = error.code;
+          var errorMessage = error.message;
+        });
+    }
   }
 
   handleButtonSwitch() {
     this.setState(prevState => {
       return {
-        username: prevState.username,
+        email: prevState.email,
         password: prevState.password,
         student: prevState.student,
         registration: !prevState.registration
@@ -55,7 +79,7 @@ class LoginForm extends Component {
   handleUserSwitch() {
     this.setState(prevState => {
       return {
-        username: prevState.username,
+        email: prevState.email,
         password: prevState.password,
         student: !prevState.student,
         registration: prevState.registration
@@ -76,12 +100,12 @@ class LoginForm extends Component {
 
         <Row>
           <Form>
-            <Form.Group controlId="form_username">
+            <Form.Group controlId="form_email">
               <Form.Control
                 onChange={event => this.handleUserInfoChange(event)}
-                name="username"
+                name="email"
                 type="text"
-                placeholder="Username"
+                placeholder="email"
               />
             </Form.Group>
 
@@ -97,7 +121,7 @@ class LoginForm extends Component {
             <Button
               variant="primary"
               type="submit"
-              onClick={this.handleRegistration}
+              onClick={this.handleAuthentication}
             >
               {this.state.registration ? "Register" : "Sign In"}
             </Button>
