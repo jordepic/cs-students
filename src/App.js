@@ -55,21 +55,7 @@ export default class App extends Component {
       firebase
         .auth()
         .createUserWithEmailAndPassword(email, password)
-        .then(function(user) {
-          id = user.uid;
-          if (this.state.student) {
-            firebase
-              .database()
-              .ref("students/" + user.uid)
-              .set(true);
-          } else {
-            firebase
-              .database()
-              .ref("employers/" + user.uid)
-              .set(true);
-          }
-        })
-        .catch(function(error) {
+        .catch(error => {
           var errorCode = error.code;
           var errorMessage = error.message;
         });
@@ -77,14 +63,28 @@ export default class App extends Component {
       firebase
         .auth()
         .signInWithEmailAndPassword(email, password)
-        .then(function(user) {
-          id = user.uid;
-        })
-        .catch(function(error) {
+        .catch(error => {
           var errorCode = error.code;
           var errorMessage = error.message;
         });
     }
+    //This is causing a glitch here where things are uploaded a second time when this.state.student changes and a new user is created
+    firebase.auth().onAuthStateChanged(user => {
+      if (user) {
+        if (this.state.student) {
+          firebase
+            .database()
+            .ref("students/" + user.uid)
+            .set(true);
+        } else {
+          firebase
+            .database()
+            .ref("employers/" + user.uid)
+            .set(true);
+        }
+        id = user.uid;
+      }
+    });
     this.setState(prevState => {
       return {
         loggedIn: true,
