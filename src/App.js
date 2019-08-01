@@ -13,7 +13,8 @@ export default class App extends Component {
     email: "",
     password: "",
     student: true,
-    registration: false
+    registration: false,
+    uid: ""
   };
 
   constructor() {
@@ -24,28 +25,23 @@ export default class App extends Component {
     this.handleUserSwitch = this.handleUserSwitch.bind(this);
   }
 
-  componentDidMount() {
-    firebase.auth().onAuthStateChanged(function(user) {
-      if (user) {
-        this.setState(prevState => {
-          return {
-            loggedIn: true,
-            email: prevState.email,
-            password: prevState.password,
-            student: prevState.student,
-            registration: prevState.registration
-          };
-        });
-      }
-    });
-  }
+  // componentDidMount() {
+  //   firebase.auth().onAuthStateChanged(function(user) {
+  //     if (user) {
+  //       this.setState(prevState => {
+  //         return {loggedIn: true, email: prevState.email, password: prevState.password, student: prevState.student, registration: prevState.registration};
+  //       });
+  //     }
+  //   });
+  // }
 
   handleUserInfoChange(event) {
-    const { student, registration } = this.state;
+    const { student, registration, uid } = this.state;
     this.setState({
       [event.target.name]: event.target.value,
       student: student,
-      registration: registration
+      registration: registration,
+      uid: uid
     });
   }
 
@@ -53,10 +49,26 @@ export default class App extends Component {
     let email = this.state.email;
     let password = this.state.password;
 
+    var id = this.state.uid;
+
     if (this.state.registration) {
       firebase
         .auth()
         .createUserWithEmailAndPassword(email, password)
+        .then(function(user) {
+          id = user.uid;
+          if (this.state.student) {
+            firebase
+              .database()
+              .ref("students/" + user.uid)
+              .set(true);
+          } else {
+            firebase
+              .database()
+              .ref("employers/" + user.uid)
+              .set(true);
+          }
+        })
         .catch(function(error) {
           var errorCode = error.code;
           var errorMessage = error.message;
@@ -65,6 +77,9 @@ export default class App extends Component {
       firebase
         .auth()
         .signInWithEmailAndPassword(email, password)
+        .then(function(user) {
+          id = user.uid;
+        })
         .catch(function(error) {
           var errorCode = error.code;
           var errorMessage = error.message;
@@ -76,7 +91,8 @@ export default class App extends Component {
         email: prevState.email,
         password: prevState.password,
         student: prevState.student,
-        registration: prevState.registration
+        registration: prevState.registration,
+        uid: id
       };
     });
   }
@@ -87,7 +103,8 @@ export default class App extends Component {
         email: prevState.email,
         password: prevState.password,
         student: prevState.student,
-        registration: !prevState.registration
+        registration: !prevState.registration,
+        uid: prevState.uid
       };
     });
   }
@@ -98,7 +115,8 @@ export default class App extends Component {
         email: prevState.email,
         password: prevState.password,
         student: !prevState.student,
-        registration: prevState.registration
+        registration: prevState.registration,
+        uid: prevState.uid
       };
     });
   }
