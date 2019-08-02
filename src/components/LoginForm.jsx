@@ -49,7 +49,7 @@ class LoginForm extends Component {
         <Row>
           <Button
             className="btn btn-light btn-sm"
-            onClick={() => this.props.handleButtonSwitch()}
+            onClick={() => this.props.handleAuthenticationTypeSwitch()}
           >
             {this.props.registration
               ? "Have an account?  Sign In."

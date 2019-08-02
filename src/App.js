@@ -23,6 +23,8 @@ export default class App extends Component {
     this.handleAuthentication = this.handleAuthentication.bind(this);
     this.handleButtonSwitch = this.handleButtonSwitch.bind(this);
     this.handleUserSwitch = this.handleUserSwitch.bind(this);
+    this.register = this.register.bind(this);
+    this.login = this.login.bind(this);
   }
 
   // componentDidMount() {
@@ -51,20 +53,11 @@ export default class App extends Component {
 
     if (this.state.registration) {
       this.register(email, password);
-      // firebase.auth().onAuthStateChanged(user => {
-      //   if (user) {
-      //     if (this.state.student) {
-      //       firebase.database().ref("students/" + user.uid).set(true);
-      //     } else {
-      //       firebase.database().ref("employers/" + user.uid).set(true);
-      //     }
-      //   }
-      // });
     } else {
       this.login(email, password);
     }
 
-    //This is causing a glitch here where things are uploaded a second time when this.state.student changes and a new user is created
+    //This code is somehow making things work but it shouldn't be
 
     this.setState(prevState => {
       return {
