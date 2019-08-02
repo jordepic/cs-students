@@ -57,18 +57,18 @@ export default class App extends Component {
       this.login(email, password);
     }
 
-    //This code is somehow making things work but it shouldn't be
+    //This code is somehow making things work but it shouldn 't be
 
-    this.setState(prevState => {
-      return {
-        loggedIn: true,
-        email: prevState.email,
-        password: prevState.password,
-        student: prevState.student,
-        registration: prevState.registration,
-        uid: prevState.uid
-      };
-    });
+    // this.setState(prevState => {
+    //   return {
+    //     loggedIn: true,
+    //     email: prevState.email,
+    //     password: prevState.password,
+    //     student: prevState.student,
+    //     registration: prevState.registration,
+    //     uid: prevState.uid
+    //   };
+    // });
   }
 
   login(email, password) {

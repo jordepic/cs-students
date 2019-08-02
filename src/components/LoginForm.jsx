@@ -38,7 +38,6 @@ class LoginForm extends Component {
 
             <Button
               variant="primary"
-              type="submit"
               onClick={() => this.props.handleAuthentication()}
             >
               {this.props.registration ? "Register" : "Sign In"}
