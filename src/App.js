@@ -49,52 +49,66 @@ export default class App extends Component {
     let email = this.state.email;
     let password = this.state.password;
 
-    var id = this.state.uid;
-
     if (this.state.registration) {
-      firebase
-        .auth()
-        .createUserWithEmailAndPassword(email, password)
-        .catch(error => {
-          var errorCode = error.code;
-          var errorMessage = error.message;
-        });
+      this.register(email, password);
     } else {
-      firebase
-        .auth()
-        .signInWithEmailAndPassword(email, password)
-        .catch(error => {
-          var errorCode = error.code;
-          var errorMessage = error.message;
-        });
+      this.login(email, password);
     }
-    //This is causing a glitch here where things are uploaded a second time when this.state.student changes and a new user is created
-    firebase.auth().onAuthStateChanged(user => {
-      if (user) {
+  }
+
+  login(email, password) {
+    firebase
+      .auth()
+      .signInWithEmailAndPassword(email, password)
+      .then(user => {
+        this.setState(prevState => {
+          return {
+            loggedIn: true,
+            email: prevState.email,
+            password: prevState.password,
+            student: prevState.student,
+            registration: prevState.registration,
+            uid: user.user.uid
+          };
+        });
+      })
+      .catch(error => {
+        var errorCode = error.code;
+        var errorMessage = error.message;
+      });
+  }
+
+  register(email, password) {
+    firebase
+      .auth()
+      .createUserWithEmailAndPassword(email, password)
+      .then(user => {
         if (this.state.student) {
           firebase
             .database()
-            .ref("students/" + user.uid)
+            .ref("students/" + user.user.uid)
             .set(true);
         } else {
           firebase
             .database()
-            .ref("employers/" + user.uid)
+            .ref("employers/" + user.user.uid)
             .set(true);
         }
-        id = user.uid;
-      }
-    });
-    this.setState(prevState => {
-      return {
-        loggedIn: true,
-        email: prevState.email,
-        password: prevState.password,
-        student: prevState.student,
-        registration: prevState.registration,
-        uid: id
-      };
-    });
+        this.setState(prevState => {
+          return {
+            loggedIn: true,
+            email: prevState.email,
+            password: prevState.password,
+            student: prevState.student,
+            registration: prevState.registration,
+            uid: user.user.uid
+          };
+        });
+      })
+      .catch(error => {
+        var errorCode = error.code;
+        var errorMessage = error.message;
+      });
   }
 
   handleButtonSwitch() {
