@@ -51,9 +51,31 @@ export default class App extends Component {
 
     if (this.state.registration) {
       this.register(email, password);
+      // firebase.auth().onAuthStateChanged(user => {
+      //   if (user) {
+      //     if (this.state.student) {
+      //       firebase.database().ref("students/" + user.uid).set(true);
+      //     } else {
+      //       firebase.database().ref("employers/" + user.uid).set(true);
+      //     }
+      //   }
+      // });
     } else {
       this.login(email, password);
     }
+
+    //This is causing a glitch here where things are uploaded a second time when this.state.student changes and a new user is created
+
+    this.setState(prevState => {
+      return {
+        loggedIn: true,
+        email: prevState.email,
+        password: prevState.password,
+        student: prevState.student,
+        registration: prevState.registration,
+        uid: prevState.uid
+      };
+    });
   }
 
   login(email, password) {
