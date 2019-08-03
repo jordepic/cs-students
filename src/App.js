@@ -175,7 +175,12 @@ export default class App extends Component {
 
   render() {
     return (
-      <Container fluid="fluid">
+      <Container
+        fluid="true"
+        style={{
+          padding: 0
+        }}
+      >
         <Row>
           <Col xl={true}>
             <Navbar />
