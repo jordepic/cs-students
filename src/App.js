@@ -6,6 +6,7 @@ import { Col, Row } from "react-bootstrap";
 import firebase from "firebase/app";
 import "firebase/auth";
 import "firebase/database";
+import EditProfile from "./components/EditProfile";
 
 export default class App extends Component {
   state = {
@@ -14,14 +15,17 @@ export default class App extends Component {
     password: "",
     student: true,
     registration: false,
-    uid: ""
+    uid: "",
+    loading: false
   };
 
   constructor() {
     super();
     this.handleUserInfoChange = this.handleUserInfoChange.bind(this);
     this.handleAuthentication = this.handleAuthentication.bind(this);
-    this.handleButtonSwitch = this.handleButtonSwitch.bind(this);
+    this.handleAuthenticationTypeSwitch = this.handleAuthenticationTypeSwitch.bind(
+      this
+    );
     this.handleUserSwitch = this.handleUserSwitch.bind(this);
     this.register = this.register.bind(this);
     this.login = this.login.bind(this);
@@ -37,13 +41,17 @@ export default class App extends Component {
   //   });
   // }
 
+  // The spinner looks kinda dumb rn, you're gonna have to style that lol
+
   handleUserInfoChange(event) {
-    const { student, registration, uid } = this.state;
+    const { student, registration, uid, loggedIn, loading } = this.state;
     this.setState({
       [event.target.name]: event.target.value,
       student: student,
       registration: registration,
-      uid: uid
+      uid: uid,
+      loggedIn: loggedIn,
+      loading: loading
     });
   }
 
@@ -56,22 +64,20 @@ export default class App extends Component {
     } else {
       this.login(email, password);
     }
-
-    //This code is somehow making things work but it shouldn 't be
-
-    // this.setState(prevState => {
-    //   return {
-    //     loggedIn: true,
-    //     email: prevState.email,
-    //     password: prevState.password,
-    //     student: prevState.student,
-    //     registration: prevState.registration,
-    //     uid: prevState.uid
-    //   };
-    // });
   }
 
   login(email, password) {
+    this.setState(prevState => {
+      return {
+        loggedIn: prevState.login,
+        email: prevState.email,
+        password: prevState.password,
+        student: prevState.student,
+        registration: prevState.registration,
+        uid: prevState.uid,
+        loading: true
+      };
+    });
     firebase
       .auth()
       .signInWithEmailAndPassword(email, password)
@@ -83,7 +89,8 @@ export default class App extends Component {
             password: prevState.password,
             student: prevState.student,
             registration: prevState.registration,
-            uid: user.user.uid
+            uid: user.user.uid,
+            loading: false
           };
         });
       })
@@ -94,6 +101,17 @@ export default class App extends Component {
   }
 
   register(email, password) {
+    this.setState(prevState => {
+      return {
+        loggedIn: prevState.login,
+        email: prevState.email,
+        password: prevState.password,
+        student: prevState.student,
+        registration: prevState.registration,
+        uid: prevState.uid,
+        loading: true
+      };
+    });
     firebase
       .auth()
       .createUserWithEmailAndPassword(email, password)
@@ -116,7 +134,8 @@ export default class App extends Component {
             password: prevState.password,
             student: prevState.student,
             registration: prevState.registration,
-            uid: user.user.uid
+            uid: user.user.uid,
+            loading: false
           };
         });
       })
@@ -126,14 +145,16 @@ export default class App extends Component {
       });
   }
 
-  handleButtonSwitch() {
+  handleAuthenticationTypeSwitch() {
     this.setState(prevState => {
       return {
         email: prevState.email,
         password: prevState.password,
         student: prevState.student,
         registration: !prevState.registration,
-        uid: prevState.uid
+        uid: prevState.uid,
+        loading: prevState.loading,
+        loggedIn: prevState.loggedIn
       };
     });
   }
@@ -145,7 +166,9 @@ export default class App extends Component {
         password: prevState.password,
         student: !prevState.student,
         registration: prevState.registration,
-        uid: prevState.uid
+        uid: prevState.uid,
+        loading: prevState.loading,
+        loggedIn: prevState.loggedIn
       };
     });
   }
@@ -166,7 +189,11 @@ export default class App extends Component {
             }}
           >
             {this.state.loggedIn ? (
-              ""
+              this.state.registration ? (
+                <EditProfile student={this.state.student} />
+              ) : (
+                ""
+              )
             ) : (
               <LoginForm
                 email={this.state.email}
@@ -174,13 +201,16 @@ export default class App extends Component {
                 student={this.state.student}
                 registration={this.state.registration}
                 handleUserInfoChange={this.handleUserInfoChange}
-                handleButtonSwitch={this.handleButtonSwitch}
+                handleAuthenticationTypeSwitch={
+                  this.handleAuthenticationTypeSwitch
+                }
                 handleAuthentication={this.handleAuthentication}
                 handleUserSwitch={this.handleUserSwitch}
               />
             )}
           </Col>
         </Row>
+        {this.state.loading ? <div class="spinner-border"></div> : ""}
       </Container>
     );
   }
