@@ -263,37 +263,30 @@ export default class App extends Component {
             <Navbar />
           </Col>
         </Row>
-        <Row>
-          <Col
-            xl={{
-              span: 6,
-              offset: 3
-            }}
-          >
-            {this.state.loggedIn ? (
-              this.state.registration ? (
-                <EditProfile student={this.state.student} />
-              ) : (
-                ""
-              )
+        <Row noGutters="true">
+          {this.state.loggedIn ? (
+            this.state.registration ? (
+              <EditProfile student={this.state.student} />
             ) : (
-              <LoginForm
-                email={this.state.email}
-                password={this.state.password}
-                student={this.state.student}
-                registration={this.state.registration}
-                handleUserInfoChange={this.handleUserInfoChange}
-                handleAuthenticationTypeSwitch={
-                  this.handleAuthenticationTypeSwitch
-                }
-                handleAuthentication={this.handleAuthentication}
-                handleUserSwitch={this.handleUserSwitch}
-                error={this.state.error}
-              />
-            )}
-          </Col>
+              ""
+            )
+          ) : (
+            <LoginForm
+              email={this.state.email}
+              password={this.state.password}
+              student={this.state.student}
+              registration={this.state.registration}
+              handleUserInfoChange={this.handleUserInfoChange}
+              handleAuthenticationTypeSwitch={
+                this.handleAuthenticationTypeSwitch
+              }
+              handleAuthentication={this.handleAuthentication}
+              handleUserSwitch={this.handleUserSwitch}
+              error={this.state.error}
+            />
+          )}
         </Row>
-        {this.state.loading ? <div class="spinner-border"></div> : ""}
+        {this.state.loading ? <div className="spinner-border"></div> : ""}
       </Container>
     );
   }
