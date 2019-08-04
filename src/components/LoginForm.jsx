@@ -34,6 +34,13 @@ class LoginForm extends Component {
                 type="password"
                 placeholder="Password"
               />
+              <Form.Text
+                style={{
+                  color: "red"
+                }}
+              >
+                {this.props.error}
+              </Form.Text>
             </Form.Group>
 
             <Button

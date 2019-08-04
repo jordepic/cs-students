@@ -16,7 +16,8 @@ export default class App extends Component {
     student: true,
     registration: false,
     uid: "",
-    loading: false
+    loading: false,
+    error: ""
   };
 
   constructor() {
@@ -44,14 +45,15 @@ export default class App extends Component {
   // The spinner looks kinda dumb rn, you're gonna have to style that lol
 
   handleUserInfoChange(event) {
-    const { student, registration, uid, loggedIn, loading } = this.state;
+    const { student, registration, uid, loggedIn, loading, error } = this.state;
     this.setState({
       [event.target.name]: event.target.value,
       student: student,
       registration: registration,
       uid: uid,
       loggedIn: loggedIn,
-      loading: loading
+      loading: loading,
+      error: error
     });
   }
 
@@ -75,7 +77,8 @@ export default class App extends Component {
         student: prevState.student,
         registration: prevState.registration,
         uid: prevState.uid,
-        loading: true
+        loading: true,
+        error: prevState.error
       };
     });
     firebase
@@ -90,13 +93,14 @@ export default class App extends Component {
             student: prevState.student,
             registration: prevState.registration,
             uid: user.user.uid,
-            loading: false
+            loading: false,
+            error: ""
           };
         });
       })
       .catch(error => {
         var errorCode = error.code;
-        var errorMessage = error.message;
+        this.setError(errorCode);
       });
   }
 
@@ -109,7 +113,8 @@ export default class App extends Component {
         student: prevState.student,
         registration: prevState.registration,
         uid: prevState.uid,
-        loading: true
+        loading: true,
+        error: prevState.error
       };
     });
     firebase
@@ -135,14 +140,84 @@ export default class App extends Component {
             student: prevState.student,
             registration: prevState.registration,
             uid: user.user.uid,
-            loading: false
+            loading: false,
+            error: ""
           };
         });
       })
       .catch(error => {
         var errorCode = error.code;
-        var errorMessage = error.message;
+        this.setError(errorCode);
       });
+  }
+
+  setError(code) {
+    if (code === "auth/wrong-password") {
+      this.setState(prevState => {
+        return {
+          loggedIn: prevState.loggedIn,
+          email: prevState.email,
+          password: prevState.password,
+          student: prevState.student,
+          registration: prevState.registration,
+          uid: prevState.uid,
+          loading: false,
+          error: "Either email or password is incorrect, try again."
+        };
+      });
+    } else if (code === "auth/user-not-found") {
+      this.setState(prevState => {
+        return {
+          loggedIn: prevState.loggedIn,
+          email: prevState.email,
+          password: prevState.password,
+          student: prevState.student,
+          registration: prevState.registration,
+          uid: prevState.uid,
+          loading: false,
+          error: "No account associated with this email."
+        };
+      });
+    } else if (code === "auth/invalid-email") {
+      this.setState(prevState => {
+        return {
+          loggedIn: prevState.loggedIn,
+          email: prevState.email,
+          password: prevState.password,
+          student: prevState.student,
+          registration: prevState.registration,
+          uid: prevState.uid,
+          loading: false,
+          error: "Email address not valid."
+        };
+      });
+    } else if (code === "auth/weak-password") {
+      this.setState(prevState => {
+        return {
+          loggedIn: prevState.loggedIn,
+          email: prevState.email,
+          password: prevState.password,
+          student: prevState.student,
+          registration: prevState.registration,
+          uid: prevState.uid,
+          loading: false,
+          error: "Password too weak."
+        };
+      });
+    } else {
+      this.setState(prevState => {
+        return {
+          loggedIn: prevState.loggedIn,
+          email: prevState.email,
+          password: prevState.password,
+          student: prevState.student,
+          registration: prevState.registration,
+          uid: prevState.uid,
+          loading: false,
+          error: "Unknown error, try a different email or password."
+        };
+      });
+    }
   }
 
   handleAuthenticationTypeSwitch() {
@@ -154,7 +229,8 @@ export default class App extends Component {
         registration: !prevState.registration,
         uid: prevState.uid,
         loading: prevState.loading,
-        loggedIn: prevState.loggedIn
+        loggedIn: prevState.loggedIn,
+        error: prevState.error
       };
     });
   }
@@ -168,7 +244,8 @@ export default class App extends Component {
         registration: prevState.registration,
         uid: prevState.uid,
         loading: prevState.loading,
-        loggedIn: prevState.loggedIn
+        loggedIn: prevState.loggedIn,
+        error: prevState.error
       };
     });
   }
@@ -211,6 +288,7 @@ export default class App extends Component {
                 }
                 handleAuthentication={this.handleAuthentication}
                 handleUserSwitch={this.handleUserSwitch}
+                error={this.state.error}
               />
             )}
           </Col>
