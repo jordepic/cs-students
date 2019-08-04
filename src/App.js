@@ -48,7 +48,29 @@ export default class App extends Component {
   //   });
   // }
 
-  // The spinner looks kinda dumb rn, you're gonna have to style that lol
+  updateProfile() {
+    if (this.state.student) {
+      // Student profile upload
+      if (
+        this.state.lastName === "" ||
+        this.state.firstName === "" ||
+        this.state.resume === ""
+      ) {
+        //Required fields must be filled out
+      } else {
+        const {
+          firstName,
+          lastName,
+          grade,
+          linkedin,
+          github,
+          resume
+        } = this.state;
+      }
+    } else {
+      //Employer profile upload
+    }
+  }
 
   handleUserInfoChange(event) {
     this.setState({
