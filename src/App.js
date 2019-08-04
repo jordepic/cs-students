@@ -258,7 +258,7 @@ export default class App extends Component {
           padding: 0
         }}
       >
-        <Row>
+        <Row noGutters="true">
           <Col xl={true}>
             <Navbar />
           </Col>

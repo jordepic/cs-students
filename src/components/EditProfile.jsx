@@ -5,13 +5,22 @@ import "firebase/database";
 import { Form, Button, Container, Row } from "react-bootstrap";
 import EditStudentProfile from "./EditStudentProfile";
 import EditCompanyProfile from "./EditCompanyProfile";
+import ProfileAlert from "./ProfileAlert";
 
 class EditProfile extends Component {
   render() {
-    if (this.props.student) {
-      return <EditStudentProfile />;
-    }
-    return <EditCompanyProfile />;
+    return (
+      <Container
+        fluid="true"
+        style={{
+          padding: 0
+        }}
+      >
+        <ProfileAlert />
+        <br />{" "}
+        {this.props.student ? <EditStudentProfile /> : <EditCompanyProfile />}
+      </Container>
+    );
   }
 }
 
