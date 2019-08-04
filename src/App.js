@@ -17,7 +17,13 @@ export default class App extends Component {
     registration: false,
     uid: "",
     loading: false,
-    error: ""
+    error: "",
+    firstName: "",
+    lastName: "",
+    grade: "freshman",
+    resume: "",
+    linkedin: "",
+    github: ""
   };
 
   constructor() {
@@ -183,7 +189,10 @@ export default class App extends Component {
         <Row noGutters="true">
           {this.state.loggedIn ? (
             this.state.registration ? (
-              <EditProfile student={this.state.student} />
+              <EditProfile
+                student={this.state.student}
+                handleUserInfoChange={this.handleUserInfoChange}
+              />
             ) : (
               ""
             )

@@ -18,7 +18,15 @@ class EditProfile extends Component {
       >
         <ProfileAlert />
         <br />{" "}
-        {this.props.student ? <EditStudentProfile /> : <EditCompanyProfile />}
+        {this.props.student ? (
+          <EditStudentProfile
+            handleUserInfoChange={this.props.handleUserInfoChange}
+          />
+        ) : (
+          <EditCompanyProfile
+            handleUserInfoChange={this.props.handleUserInfoChange}
+          />
+        )}
       </Container>
     );
   }

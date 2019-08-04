@@ -19,7 +19,11 @@ class EditStudentProfile extends Component {
             <Form>
               <Form.Group>
                 <Form.Label>First Name</Form.Label>
-                <Form.Control name="firstName" placeholder="First Name" />
+                <Form.Control
+                  name="firstName"
+                  placeholder="First Name"
+                  onChange={event => this.props.handleUserInfoChange(event)}
+                />
                 <Form.Text
                   style={{
                     color: "red"
@@ -31,7 +35,11 @@ class EditStudentProfile extends Component {
 
               <Form.Group>
                 <Form.Label>Last Name</Form.Label>
-                <Form.Control name="lastName" placeholder="Last Name" />
+                <Form.Control
+                  name="lastName"
+                  placeholder="Last Name"
+                  onChange={event => this.props.handleUserInfoChange(event)}
+                />
                 <Form.Text
                   style={{
                     color: "red"
@@ -43,11 +51,15 @@ class EditStudentProfile extends Component {
 
               <Form.Group controlId="exampleForm.ControlSelect1">
                 <Form.Label>Select School Year</Form.Label>
-                <Form.Control as="select">
-                  <option>Freshman</option>
-                  <option>Sophomore</option>
-                  <option>Junior</option>
-                  <option>Senior</option>
+                <Form.Control
+                  as="select"
+                  name="grade"
+                  onChange={event => this.props.handleUserInfoChange(event)}
+                >
+                  <option value="freshman">Freshman</option>
+                  <option value="sophomore">Sophomore</option>
+                  <option value="junior">Junior</option>
+                  <option value="senior">Senior</option>
                 </Form.Control>
                 <Form.Text
                   style={{
@@ -60,12 +72,20 @@ class EditStudentProfile extends Component {
 
               <Form.Group>
                 <Form.Label>Linkedin Profile</Form.Label>
-                <Form.Control name="Linkedin" placeholder="LinkedIn" />
+                <Form.Control
+                  name="linkedin"
+                  placeholder="LinkedIn"
+                  onChange={event => this.props.handleUserInfoChange(event)}
+                />
               </Form.Group>
 
               <Form.Group>
                 <Form.Label>Github Profile</Form.Label>
-                <Form.Control name="Linkedin" placeholder="Github" />
+                <Form.Control
+                  name="github"
+                  placeholder="Github"
+                  onChange={event => this.props.handleUserInfoChange(event)}
+                />
               </Form.Group>
 
               <Form.Group>
