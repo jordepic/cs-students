@@ -45,15 +45,8 @@ export default class App extends Component {
   // The spinner looks kinda dumb rn, you're gonna have to style that lol
 
   handleUserInfoChange(event) {
-    const { student, registration, uid, loggedIn, loading, error } = this.state;
     this.setState({
-      [event.target.name]: event.target.value,
-      student: student,
-      registration: registration,
-      uid: uid,
-      loggedIn: loggedIn,
-      loading: loading,
-      error: error
+      [event.target.name]: event.target.value
     });
   }
 
@@ -70,16 +63,7 @@ export default class App extends Component {
 
   login(email, password) {
     this.setState(prevState => {
-      return {
-        loggedIn: prevState.login,
-        email: prevState.email,
-        password: prevState.password,
-        student: prevState.student,
-        registration: prevState.registration,
-        uid: prevState.uid,
-        loading: true,
-        error: prevState.error
-      };
+      return { loading: true };
     });
     firebase
       .auth()
@@ -88,10 +72,6 @@ export default class App extends Component {
         this.setState(prevState => {
           return {
             loggedIn: true,
-            email: prevState.email,
-            password: prevState.password,
-            student: prevState.student,
-            registration: prevState.registration,
             uid: user.user.uid,
             loading: false,
             error: ""
@@ -106,16 +86,7 @@ export default class App extends Component {
 
   register(email, password) {
     this.setState(prevState => {
-      return {
-        loggedIn: prevState.login,
-        email: prevState.email,
-        password: prevState.password,
-        student: prevState.student,
-        registration: prevState.registration,
-        uid: prevState.uid,
-        loading: true,
-        error: prevState.error
-      };
+      return { loading: true };
     });
     firebase
       .auth()
@@ -135,10 +106,6 @@ export default class App extends Component {
         this.setState(prevState => {
           return {
             loggedIn: true,
-            email: prevState.email,
-            password: prevState.password,
-            student: prevState.student,
-            registration: prevState.registration,
             uid: user.user.uid,
             loading: false,
             error: ""
@@ -155,12 +122,6 @@ export default class App extends Component {
     if (code === "auth/wrong-password") {
       this.setState(prevState => {
         return {
-          loggedIn: prevState.loggedIn,
-          email: prevState.email,
-          password: prevState.password,
-          student: prevState.student,
-          registration: prevState.registration,
-          uid: prevState.uid,
           loading: false,
           error: "Either email or password is incorrect, try again."
         };
@@ -168,51 +129,21 @@ export default class App extends Component {
     } else if (code === "auth/user-not-found") {
       this.setState(prevState => {
         return {
-          loggedIn: prevState.loggedIn,
-          email: prevState.email,
-          password: prevState.password,
-          student: prevState.student,
-          registration: prevState.registration,
-          uid: prevState.uid,
           loading: false,
           error: "No account associated with this email."
         };
       });
     } else if (code === "auth/invalid-email") {
       this.setState(prevState => {
-        return {
-          loggedIn: prevState.loggedIn,
-          email: prevState.email,
-          password: prevState.password,
-          student: prevState.student,
-          registration: prevState.registration,
-          uid: prevState.uid,
-          loading: false,
-          error: "Email address not valid."
-        };
+        return { loading: false, error: "Email address not valid." };
       });
     } else if (code === "auth/weak-password") {
       this.setState(prevState => {
-        return {
-          loggedIn: prevState.loggedIn,
-          email: prevState.email,
-          password: prevState.password,
-          student: prevState.student,
-          registration: prevState.registration,
-          uid: prevState.uid,
-          loading: false,
-          error: "Password too weak."
-        };
+        return { loading: false, error: "Password too weak." };
       });
     } else {
       this.setState(prevState => {
         return {
-          loggedIn: prevState.loggedIn,
-          email: prevState.email,
-          password: prevState.password,
-          student: prevState.student,
-          registration: prevState.registration,
-          uid: prevState.uid,
           loading: false,
           error: "Unknown error, try a different email or password."
         };
@@ -223,14 +154,7 @@ export default class App extends Component {
   handleAuthenticationTypeSwitch() {
     this.setState(prevState => {
       return {
-        email: prevState.email,
-        password: prevState.password,
-        student: prevState.student,
-        registration: !prevState.registration,
-        uid: prevState.uid,
-        loading: prevState.loading,
-        loggedIn: prevState.loggedIn,
-        error: prevState.error
+        registration: !prevState.registration
       };
     });
   }
@@ -238,14 +162,7 @@ export default class App extends Component {
   handleUserSwitch() {
     this.setState(prevState => {
       return {
-        email: prevState.email,
-        password: prevState.password,
-        student: !prevState.student,
-        registration: prevState.registration,
-        uid: prevState.uid,
-        loading: prevState.loading,
-        loggedIn: prevState.loggedIn,
-        error: prevState.error
+        student: !prevState.student
       };
     });
   }
