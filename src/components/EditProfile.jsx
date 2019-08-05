@@ -16,11 +16,12 @@ class EditProfile extends Component {
           padding: 0
         }}
       >
-        <ProfileAlert />
+        <ProfileAlert updateProfile={this.props.updateProfile} />
         <br />{" "}
         {this.props.student ? (
           <EditStudentProfile
             handleUserInfoChange={this.props.handleUserInfoChange}
+            setResume={this.props.setResume}
           />
         ) : (
           <EditCompanyProfile

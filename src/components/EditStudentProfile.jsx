@@ -91,7 +91,12 @@ class EditStudentProfile extends Component {
               <Form.Group>
                 <Form.Label>Resume/CV</Form.Label>
                 <br />
-                <input type="file" name="pic" accept=".doc, .docx, .pdf" />
+                <input
+                  type="file"
+                  name="resume"
+                  accept=".doc, .docx, .pdf"
+                  onChange={event => this.props.setResume(event)}
+                />
                 <Form.Text
                   style={{
                     color: "red"

@@ -6,6 +6,7 @@ import { Col, Row } from "react-bootstrap";
 import firebase from "firebase/app";
 import "firebase/auth";
 import "firebase/database";
+import "firebase/storage";
 import EditProfile from "./components/EditProfile";
 
 export default class App extends Component {
@@ -23,7 +24,8 @@ export default class App extends Component {
     grade: "freshman",
     resume: "",
     linkedin: "",
-    github: ""
+    github: "",
+    resumeURL: ""
   };
 
   constructor() {
@@ -36,6 +38,8 @@ export default class App extends Component {
     this.handleUserSwitch = this.handleUserSwitch.bind(this);
     this.register = this.register.bind(this);
     this.login = this.login.bind(this);
+    this.setResume = this.setResume.bind(this);
+    this.updateProfile = this.updateProfile.bind(this);
   }
 
   // componentDidMount() {
@@ -54,9 +58,8 @@ export default class App extends Component {
       if (
         this.state.lastName === "" ||
         this.state.firstName === "" ||
-        this.state.resume === ""
+        this.state.resume === null
       ) {
-        //Required fields must be filled out
       } else {
         const {
           firstName,
@@ -66,10 +69,42 @@ export default class App extends Component {
           github,
           resume
         } = this.state;
+        this.setState({ loading: true });
+        firebase
+          .database()
+          .ref("students/" + this.state.uid)
+          .set({
+            firstName,
+            lastName,
+            grade,
+            linkedin,
+            github,
+            resume
+          })
+          .then(() => {
+            const resume = firebase
+              .storage()
+              .ref()
+              .child(this.state.uid + "/resume");
+            resume.put(this.state.resume).then(snapshot => {
+              resume.getDownloadURL().then(url => {
+                this.setState({ resumeURL: url, loading: false });
+              });
+            });
+          })
+          .catch(error => {
+            this.setState({ loading: false });
+          });
       }
     } else {
       //Employer profile upload
     }
+  }
+
+  setResume(event) {
+    this.setState({
+      [event.target.name]: event.target.files[0]
+    });
   }
 
   handleUserInfoChange(event) {
@@ -212,8 +247,10 @@ export default class App extends Component {
           {this.state.loggedIn ? (
             this.state.registration ? (
               <EditProfile
+                setResume={this.setResume}
                 student={this.state.student}
                 handleUserInfoChange={this.handleUserInfoChange}
+                updateProfile={this.updateProfile}
               />
             ) : (
               ""
