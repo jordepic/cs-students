@@ -95,7 +95,7 @@ class EditStudentProfile extends Component {
                   type="file"
                   name="resume"
                   accept=".doc, .docx, .pdf"
-                  onChange={event => this.props.setResume(event)}
+                  onChange={event => this.props.setFile(event)}
                 />
                 <Form.Text
                   style={{

@@ -38,7 +38,7 @@ export default class App extends Component {
     this.handleUserSwitch = this.handleUserSwitch.bind(this);
     this.register = this.register.bind(this);
     this.login = this.login.bind(this);
-    this.setResume = this.setResume.bind(this);
+    this.setFile = this.setFile.bind(this);
     this.updateProfile = this.updateProfile.bind(this);
   }
 
@@ -101,7 +101,7 @@ export default class App extends Component {
     }
   }
 
-  setResume(event) {
+  setFile(event) {
     this.setState({
       [event.target.name]: event.target.files[0]
     });
@@ -247,7 +247,7 @@ export default class App extends Component {
           {this.state.loggedIn ? (
             this.state.registration ? (
               <EditProfile
-                setResume={this.setResume}
+                setFile={this.setFile}
                 student={this.state.student}
                 handleUserInfoChange={this.handleUserInfoChange}
                 updateProfile={this.updateProfile}

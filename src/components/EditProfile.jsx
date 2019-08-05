@@ -21,7 +21,7 @@ class EditProfile extends Component {
         {this.props.student ? (
           <EditStudentProfile
             handleUserInfoChange={this.props.handleUserInfoChange}
-            setResume={this.props.setResume}
+            setFile={this.props.setFile}
           />
         ) : (
           <EditCompanyProfile
