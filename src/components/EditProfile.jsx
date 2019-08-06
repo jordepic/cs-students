@@ -18,14 +18,20 @@ class EditProfile extends Component {
       >
         <ProfileAlert updateProfile={this.props.updateProfile} />
         <br />{" "}
-        {this.props.student ? (
+        {this.props.info.student ? (
           <EditStudentProfile
             handleUserInfoChange={this.props.handleUserInfoChange}
             setFile={this.props.setFile}
+            firstName={this.props.info.firstName}
+            lastName={this.props.info.lastName}
+            linkedin={this.props.info.linkedin}
+            github={this.props.info.github}
+            grade={this.props.info.grade}
           />
         ) : (
           <EditCompanyProfile
             handleUserInfoChange={this.props.handleUserInfoChange}
+            setFile={this.props.setFile}
           />
         )}
       </Container>

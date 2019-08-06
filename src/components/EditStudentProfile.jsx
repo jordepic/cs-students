@@ -23,6 +23,7 @@ class EditStudentProfile extends Component {
                   name="firstName"
                   placeholder="First Name"
                   onChange={event => this.props.handleUserInfoChange(event)}
+                  defaultValue={this.props.firstName}
                 />
                 <Form.Text
                   style={{
@@ -39,6 +40,7 @@ class EditStudentProfile extends Component {
                   name="lastName"
                   placeholder="Last Name"
                   onChange={event => this.props.handleUserInfoChange(event)}
+                  defaultValue={this.props.lastName}
                 />
                 <Form.Text
                   style={{
@@ -55,6 +57,7 @@ class EditStudentProfile extends Component {
                   as="select"
                   name="grade"
                   onChange={event => this.props.handleUserInfoChange(event)}
+                  defaultValue={this.props.grade}
                 >
                   <option value="freshman">Freshman</option>
                   <option value="sophomore">Sophomore</option>
@@ -76,6 +79,7 @@ class EditStudentProfile extends Component {
                   name="linkedin"
                   placeholder="LinkedIn"
                   onChange={event => this.props.handleUserInfoChange(event)}
+                  defaultValue={this.props.linkedin}
                 />
               </Form.Group>
 
@@ -85,11 +89,15 @@ class EditStudentProfile extends Component {
                   name="github"
                   placeholder="Github"
                   onChange={event => this.props.handleUserInfoChange(event)}
+                  defaultValue={this.props.github}
                 />
               </Form.Group>
 
               <Form.Group>
-                <Form.Label>Resume/CV</Form.Label>
+                <Form.Label>
+                  Resume/CV (If no file is selected existing resume will not be
+                  overridden)
+                </Form.Label>
                 <br />
                 <input
                   type="file"
@@ -97,12 +105,8 @@ class EditStudentProfile extends Component {
                   accept=".doc, .docx, .pdf"
                   onChange={event => this.props.setFile(event)}
                 />
-                <Form.Text
-                  style={{
-                    color: "red"
-                  }}
-                >
-                  *Required - must be .doc, .docx, .pdf format
+                <Form.Text className="text-muted">
+                  Must be .doc, .docx, .pdf format
                 </Form.Text>
               </Form.Group>
             </Form>

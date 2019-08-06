@@ -55,11 +55,7 @@ export default class App extends Component {
   updateProfile() {
     if (this.state.student) {
       // Student profile upload
-      if (
-        this.state.lastName === "" ||
-        this.state.firstName === "" ||
-        this.state.resume === null
-      ) {
+      if (this.state.lastName === "" || this.state.firstName === "") {
       } else {
         const {
           firstName,
@@ -70,31 +66,37 @@ export default class App extends Component {
           resume
         } = this.state;
         this.setState({ loading: true });
-        firebase
-          .database()
-          .ref("students/" + this.state.uid)
-          .set({
-            firstName,
-            lastName,
-            grade,
-            linkedin,
-            github,
-            resume
-          })
-          .then(() => {
-            const resume = firebase
-              .storage()
-              .ref()
-              .child(this.state.uid + "/resume");
-            resume.put(this.state.resume).then(snapshot => {
-              resume.getDownloadURL().then(url => {
-                this.setState({ resumeURL: url, loading: false });
-              });
+        if (this.state.resume === null) {
+          firebase
+            .database()
+            .ref("students/" + this.state.uid)
+            .set({ firstName, lastName, grade, linkedin, github })
+            .then(() => {
+              this.setState({ loading: false });
+            })
+            .catch(error => {
+              this.setState({ loading: false });
             });
-          })
-          .catch(error => {
-            this.setState({ loading: false });
-          });
+        } else {
+          firebase
+            .database()
+            .ref("students/" + this.state.uid)
+            .set({ firstName, lastName, grade, linkedin, github })
+            .then(() => {
+              const resume = firebase
+                .storage()
+                .ref()
+                .child(this.state.uid + "/resume");
+              resume.put(this.state.resume).then(snapshot => {
+                resume.getDownloadURL().then(url => {
+                  this.setState({ resumeURL: url, loading: false });
+                });
+              });
+            })
+            .catch(error => {
+              this.setState({ loading: false });
+            });
+        }
       }
     } else {
       //Employer profile upload
@@ -248,9 +250,9 @@ export default class App extends Component {
             this.state.registration ? (
               <EditProfile
                 setFile={this.setFile}
-                student={this.state.student}
                 handleUserInfoChange={this.handleUserInfoChange}
                 updateProfile={this.updateProfile}
+                info={this.state}
               />
             ) : (
               ""
