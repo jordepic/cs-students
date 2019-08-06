@@ -32,6 +32,9 @@ class EditProfile extends Component {
           <EditCompanyProfile
             handleUserInfoChange={this.props.handleUserInfoChange}
             setFile={this.props.setFile}
+            companyName={this.props.info.companyName}
+            companyURL={this.props.info.companyURL}
+            companyPhoto={this.props.info.companyPhoto}
           />
         )}
       </Container>

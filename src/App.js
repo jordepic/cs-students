@@ -25,7 +25,11 @@ export default class App extends Component {
     resume: "",
     linkedin: "",
     github: "",
-    resumeURL: ""
+    resumeURL: "",
+    companyName: "",
+    companyURL: "",
+    companyPhoto: "",
+    companyPhotoURL: ""
   };
 
   constructor() {
