@@ -3,7 +3,7 @@ import firebase from "firebase/app";
 import "firebase/auth";
 import "firebase/database";
 import { Form, Button, Container, Row, Alert, Col } from "react-bootstrap";
-import EditJob from "./components/EditJob";
+import EditJob from "./EditJob";
 
 class EditCompanyProfile extends Component {
   constructor() {
