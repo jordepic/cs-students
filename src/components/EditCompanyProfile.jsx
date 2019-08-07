@@ -3,8 +3,15 @@ import firebase from "firebase/app";
 import "firebase/auth";
 import "firebase/database";
 import { Form, Button, Container, Row, Alert, Col } from "react-bootstrap";
+import EditJob from "./components/EditJob";
 
 class EditCompanyProfile extends Component {
+  constructor() {
+    super();
+  }
+
+  //const jobListings = this.props.jobs.map(job => <EditJob title={job.title} description={job.description}/>)
+
   render() {
     return (
       <Container
@@ -65,6 +72,14 @@ class EditCompanyProfile extends Component {
                 />
                 <Form.Text className="text-muted">Must be an image</Form.Text>
               </Form.Group>
+
+              <Button
+                variant="dark"
+                onClick={() => this.props.addJob("", "")}
+                block="block"
+              >
+                Add Job Listing
+              </Button>
             </Form>
           </Col>
           <Col></Col>

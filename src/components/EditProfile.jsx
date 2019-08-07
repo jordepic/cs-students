@@ -35,6 +35,8 @@ class EditProfile extends Component {
             companyName={this.props.info.companyName}
             companyURL={this.props.info.companyURL}
             companyPhoto={this.props.info.companyPhoto}
+            jobs={this.props.info.jobs}
+            addJob={this.props.addJob}
           />
         )}
       </Container>

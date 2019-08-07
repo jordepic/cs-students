@@ -29,7 +29,8 @@ export default class App extends Component {
     companyName: "",
     companyURL: "",
     companyPhoto: "",
-    companyPhotoURL: ""
+    companyPhotoURL: "",
+    jobs: []
   };
 
   constructor() {
@@ -44,6 +45,7 @@ export default class App extends Component {
     this.login = this.login.bind(this);
     this.setFile = this.setFile.bind(this);
     this.updateProfile = this.updateProfile.bind(this);
+    this.addJob = this.addJob.bind(this);
   }
 
   // componentDidMount() {
@@ -55,6 +57,13 @@ export default class App extends Component {
   //     }
   //   });
   // }
+
+  addJob(title, description) {
+    const job = new Job(title, description);
+    this.setState(prevState => {
+      return { jobs: prevState.jobs.push(job) };
+    });
+  }
 
   updateProfile() {
     if (this.state.student) {
@@ -257,6 +266,7 @@ export default class App extends Component {
                 handleUserInfoChange={this.handleUserInfoChange}
                 updateProfile={this.updateProfile}
                 info={this.state}
+                addJob={this.addJob}
               />
             ) : (
               ""
@@ -280,5 +290,12 @@ export default class App extends Component {
         {this.state.loading ? <div className="spinner-border"></div> : ""}
       </Container>
     );
+  }
+}
+
+class Job {
+  constructor(title, description) {
+    this.title = title;
+    this.description = description;
   }
 }
