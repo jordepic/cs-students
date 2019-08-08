@@ -10,13 +10,13 @@ class ProfileAlert extends Component {
       <Alert variant="dark">
         Update your profile!
         <Button
-          variant="outline-success"
+          variant="success"
           onClick={() => this.props.updateProfile()}
           className="float-right"
         >
           Save Changes
         </Button>
-        <Button variant="outline-danger" className="float-right">
+        <Button variant="danger" className="float-right">
           Cancel Changes
         </Button>
       </Alert>

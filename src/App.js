@@ -11,7 +11,7 @@ import EditProfile from "./components/EditProfile";
 
 export default class App extends Component {
   state = {
-    loggedIn: true,
+    loggedIn: false,
     email: "",
     password: "",
     student: false,
@@ -48,6 +48,8 @@ export default class App extends Component {
     this.addJob = this.addJob.bind(this);
     this.handleJobListingChange = this.handleJobListingChange.bind(this);
     this.deleteJobListing = this.deleteJobListing.bind(this);
+    this.studentUpload = this.studentUpload.bind(this);
+    this.companyUpload = this.companyUpload.bind(this);
   }
 
   // componentDidMount() {
@@ -87,54 +89,176 @@ export default class App extends Component {
     this.setState({ jobs: jobs });
   }
 
+  studentUpload() {
+    if (this.state.lastName === "" || this.state.firstName === "") {
+    } else {
+      const {
+        firstName,
+        lastName,
+        grade,
+        linkedin,
+        github,
+        resume,
+        resumeURL
+      } = this.state;
+      this.setState({ loading: true });
+      if (this.state.resume === null) {
+        firebase
+          .database()
+          .ref("students/" + this.state.uid)
+          .set({
+            firstName,
+            lastName,
+            grade,
+            linkedin,
+            github,
+            resumeURL
+          })
+          .then(() => {
+            this.setState({ loading: false });
+          })
+          .catch(error => {
+            this.setState({ loading: false });
+          });
+      } else {
+        const resumeRef = firebase
+          .storage()
+          .ref()
+          .child(this.state.uid + "/resume");
+        resumeRef
+          .put(this.state.resume)
+          .then(snapshot => {
+            resumeRef.getDownloadURL().then(url => {
+              this.setState({ resumeURL: url });
+              firebase
+                .database()
+                .ref("students/" + this.state.uid)
+                .set({
+                  firstName,
+                  lastName,
+                  grade,
+                  linkedin,
+                  github,
+                  resumeURL: url
+                })
+                .then(() => {
+                  this.setState({ loading: false });
+                });
+            });
+          })
+          .catch(error => {
+            this.setState({ loading: false });
+          });
+      }
+    }
+  }
+
+  companyUpload() {
+    //This code could be much cleaner, will do so later
+    var jobListingsEmpty = false;
+    for (var job of this.state.jobs) {
+      if (job.description === "" || job.title === "") {
+        jobListingsEmpty = true;
+      }
+    }
+    if (
+      this.state.companyName === "" ||
+      this.state.companyURL === "" ||
+      jobListingsEmpty
+    ) {
+      // Set error state, display on screen
+    } else {
+      this.setState({ loading: true });
+      const {
+        companyName,
+        companyURL,
+        companyPhoto,
+        jobs,
+        companyPhotoURL
+      } = this.state;
+      if (this.state.companyPhoto === null) {
+        var updates = {};
+        for (var job of this.state.jobs) {
+          job.companyName = companyName;
+          job.companyURL = companyURL;
+          job.companyPhotoURL = this.state.companyPhotoURL;
+          job.postKey = firebase
+            .database()
+            .ref()
+            .child("jobs")
+            .push().key;
+          updates["/jobs/" + job.postKey] = job;
+        }
+        firebase
+          .database()
+          .ref("employers/" + this.state.uid)
+          .set({ companyName, companyURL, jobs, companyPhotoURL })
+          .then(() => {
+            firebase
+              .database()
+              .ref()
+              .update(updates)
+              .then(() => {
+                this.setState({ loading: false });
+              });
+          })
+          .catch(error => {
+            this.setState({ loading: false });
+          });
+      } else {
+        const logo = firebase
+          .storage()
+          .ref()
+          .child(this.state.uid + "/logo");
+        logo
+          .put(this.state.companyPhoto)
+          .then(snapshot => {
+            logo.getDownloadURL().then(url => {
+              this.setState({ companyPhotoURL: url });
+              var updates = {};
+              for (var job of this.state.jobs) {
+                job.companyName = companyName;
+                job.companyURL = companyURL;
+                job.companyPhotoURL = this.state.companyPhotoURL;
+                job.postKey = firebase
+                  .database()
+                  .ref()
+                  .child("jobs")
+                  .push().key;
+                updates["/jobs/" + job.postKey] = job;
+              }
+              firebase
+                .database()
+                .ref("employers/" + this.state.uid)
+                .set({
+                  companyName,
+                  companyURL,
+                  jobs,
+                  companyPhotoURL: this.state.companyPhotoURL
+                })
+                .then(() => {
+                  firebase
+                    .database()
+                    .ref()
+                    .update(updates)
+                    .then(() => {
+                      this.setState({ loading: false });
+                    });
+                });
+            });
+          })
+          .catch(error => {
+            this.setState({ loading: false });
+          });
+      }
+    }
+  }
+
   updateProfile() {
     if (this.state.student) {
-      // Student profile upload
-      if (this.state.lastName === "" || this.state.firstName === "") {
-      } else {
-        const {
-          firstName,
-          lastName,
-          grade,
-          linkedin,
-          github,
-          resume
-        } = this.state;
-        this.setState({ loading: true });
-        if (this.state.resume === null) {
-          firebase
-            .database()
-            .ref("students/" + this.state.uid)
-            .set({ firstName, lastName, grade, linkedin, github })
-            .then(() => {
-              this.setState({ loading: false });
-            })
-            .catch(error => {
-              this.setState({ loading: false });
-            });
-        } else {
-          firebase
-            .database()
-            .ref("students/" + this.state.uid)
-            .set({ firstName, lastName, grade, linkedin, github })
-            .then(() => {
-              const resume = firebase
-                .storage()
-                .ref()
-                .child(this.state.uid + "/resume");
-              resume.put(this.state.resume).then(snapshot => {
-                resume.getDownloadURL().then(url => {
-                  this.setState({ resumeURL: url, loading: false });
-                });
-              });
-            })
-            .catch(error => {
-              this.setState({ loading: false });
-            });
-        }
-      }
+      this.studentUpload();
     } else {
-      //Employer profile upload
+      this.companyUpload();
     }
   }
 
