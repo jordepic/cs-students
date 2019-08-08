@@ -10,9 +10,20 @@ class EditCompanyProfile extends Component {
     super();
   }
 
-  //const jobListings = this.props.jobs.map(job => <EditJob title={job.title} description={job.description}/>)
-
   render() {
+    const jobs = this.props.jobs.map(job => (
+      <React.Fragment>
+        <EditJob
+          key={this.props.jobs.indexOf(job)}
+          id={this.props.jobs.indexOf(job)}
+          title={job.title}
+          description={job.description}
+          handleJobListingChange={this.props.handleJobListingChange}
+          deleteJobListing={this.props.deleteJobListing}
+        />
+        <br />
+      </React.Fragment>
+    ));
     return (
       <Container
         fluid={true}
@@ -80,6 +91,10 @@ class EditCompanyProfile extends Component {
               >
                 Add Job Listing
               </Button>
+
+              <br />
+
+              <ul>{jobs}</ul>
             </Form>
           </Col>
           <Col></Col>

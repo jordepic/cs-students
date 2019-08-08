@@ -11,11 +11,11 @@ import EditProfile from "./components/EditProfile";
 
 export default class App extends Component {
   state = {
-    loggedIn: false,
+    loggedIn: true,
     email: "",
     password: "",
-    student: true,
-    registration: false,
+    student: false,
+    registration: true,
     uid: "",
     loading: false,
     error: "",
@@ -46,6 +46,8 @@ export default class App extends Component {
     this.setFile = this.setFile.bind(this);
     this.updateProfile = this.updateProfile.bind(this);
     this.addJob = this.addJob.bind(this);
+    this.handleJobListingChange = this.handleJobListingChange.bind(this);
+    this.deleteJobListing = this.deleteJobListing.bind(this);
   }
 
   // componentDidMount() {
@@ -61,8 +63,28 @@ export default class App extends Component {
   addJob(title, description) {
     const job = new Job(title, description);
     this.setState(prevState => {
-      return { jobs: prevState.jobs.push(job) };
+      return {
+        jobs: [...prevState.jobs, job]
+      };
     });
+  }
+
+  handleJobListingChange(event, id) {
+    //I'm sure this could be much cleaner, not sure how to directly edit only one property of object, will have to go over this later
+    var jobs = this.state.jobs;
+
+    if (event.target.name === "title") {
+      jobs[id].title = event.target.value;
+    } else if (event.target.name === "description") {
+      jobs[id].description = event.target.value;
+    }
+    this.setState({ jobs: jobs });
+  }
+
+  deleteJobListing(id) {
+    var jobs = this.state.jobs;
+    jobs.splice(id, 1);
+    this.setState({ jobs: jobs });
   }
 
   updateProfile() {
@@ -267,6 +289,8 @@ export default class App extends Component {
                 updateProfile={this.updateProfile}
                 info={this.state}
                 addJob={this.addJob}
+                handleJobListingChange={this.handleJobListingChange}
+                deleteJobListing={this.deleteJobListing}
               />
             ) : (
               ""

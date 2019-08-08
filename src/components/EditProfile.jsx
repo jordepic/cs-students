@@ -37,6 +37,8 @@ class EditProfile extends Component {
             companyPhoto={this.props.info.companyPhoto}
             jobs={this.props.info.jobs}
             addJob={this.props.addJob}
+            handleJobListingChange={this.props.handleJobListingChange}
+            deleteJobListing={this.props.deleteJobListing}
           />
         )}
       </Container>
