@@ -51,6 +51,7 @@ export default class App extends Component {
     this.studentUpload = this.studentUpload.bind(this);
     this.companyUpload = this.companyUpload.bind(this);
     this.signOut = this.signOut.bind(this);
+    this.cancelEdits = this.cancelEdits.bind(this);
   }
 
   // componentDidMount() {
@@ -62,6 +63,8 @@ export default class App extends Component {
   //     }
   //   });
   // }
+
+  cancelEdits() {}
 
   signOut() {
     this.setState(prevState => {
@@ -481,6 +484,7 @@ export default class App extends Component {
                 addJob={this.addJob}
                 handleJobListingChange={this.handleJobListingChange}
                 deleteJobListing={this.deleteJobListing}
+                cancelEdits={this.cancelEdits}
               />
             ) : (
               ""

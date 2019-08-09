@@ -16,7 +16,11 @@ class ProfileAlert extends Component {
         >
           Save Changes
         </Button>
-        <Button variant="danger" className="float-right">
+        <Button
+          variant="danger"
+          className="float-right"
+          onClick={() => this.props.cancelEdits()}
+        >
           Cancel Changes
         </Button>
       </Alert>

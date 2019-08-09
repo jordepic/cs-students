@@ -16,7 +16,10 @@ class EditProfile extends Component {
           padding: 0
         }}
       >
-        <ProfileAlert updateProfile={this.props.updateProfile} />
+        <ProfileAlert
+          updateProfile={this.props.updateProfile}
+          cancelEdits={this.props.cancelEdits}
+        />
         <br />{" "}
         {this.props.info.student ? (
           <EditStudentProfile
