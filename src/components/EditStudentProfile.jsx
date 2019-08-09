@@ -102,11 +102,11 @@ class EditStudentProfile extends Component {
                 <input
                   type="file"
                   name="resume"
-                  accept=".doc, .docx, .pdf"
+                  accept=".pdf"
                   onChange={event => this.props.setFile(event)}
                 />
                 <Form.Text className="text-muted">
-                  Must be .doc, .docx, .pdf format
+                  Must be .pdf format
                 </Form.Text>
               </Form.Group>
             </Form>

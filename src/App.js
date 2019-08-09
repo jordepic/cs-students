@@ -14,8 +14,8 @@ export default class App extends Component {
     loggedIn: false,
     email: "",
     password: "",
-    student: false,
-    registration: true,
+    student: true,
+    registration: false,
     uid: "",
     loading: false,
     error: "",
@@ -50,6 +50,7 @@ export default class App extends Component {
     this.deleteJobListing = this.deleteJobListing.bind(this);
     this.studentUpload = this.studentUpload.bind(this);
     this.companyUpload = this.companyUpload.bind(this);
+    this.signOut = this.signOut.bind(this);
   }
 
   // componentDidMount() {
@@ -62,6 +63,33 @@ export default class App extends Component {
   //   });
   // }
 
+  signOut() {
+    this.setState(prevState => {
+      return {
+        loggedIn: false,
+        email: "",
+        password: "",
+        student: prevState.student,
+        registration: prevState.registration,
+        uid: "",
+        loading: false,
+        error: "",
+        firstName: "",
+        lastName: "",
+        grade: "freshman",
+        resume: "",
+        linkedin: "",
+        github: "",
+        resumeURL: "",
+        companyName: "",
+        companyURL: "",
+        companyPhoto: "",
+        companyPhotoURL: "",
+        jobs: []
+      };
+    });
+  }
+
   addJob(title, description) {
     const job = new Job(title, description);
     this.setState(prevState => {
@@ -72,9 +100,7 @@ export default class App extends Component {
   }
 
   handleJobListingChange(event, id) {
-    //I'm sure this could be much cleaner, not sure how to directly edit only one property of object, will have to go over this later
     var jobs = this.state.jobs;
-
     if (event.target.name === "title") {
       jobs[id].title = event.target.value;
     } else if (event.target.name === "description") {
@@ -90,168 +116,180 @@ export default class App extends Component {
   }
 
   studentUpload() {
-    if (this.state.lastName === "" || this.state.firstName === "") {
-    } else {
-      const {
-        firstName,
-        lastName,
-        grade,
-        linkedin,
-        github,
-        resume,
-        resumeURL
-      } = this.state;
-      this.setState({ loading: true });
-      if (this.state.resume === null) {
-        firebase
-          .database()
-          .ref("students/" + this.state.uid)
-          .set({
+    firebase.auth().onAuthStateChanged(user => {
+      if (user) {
+        if (this.state.lastName === "" || this.state.firstName === "") {
+        } else {
+          const {
             firstName,
             lastName,
             grade,
             linkedin,
             github,
+            resume,
             resumeURL
-          })
-          .then(() => {
-            this.setState({ loading: false });
-          })
-          .catch(error => {
-            this.setState({ loading: false });
-          });
-      } else {
-        const resumeRef = firebase
-          .storage()
-          .ref()
-          .child(this.state.uid + "/resume");
-        resumeRef
-          .put(this.state.resume)
-          .then(snapshot => {
-            resumeRef.getDownloadURL().then(url => {
-              this.setState({ resumeURL: url });
-              firebase
-                .database()
-                .ref("students/" + this.state.uid)
-                .set({
-                  firstName,
-                  lastName,
-                  grade,
-                  linkedin,
-                  github,
-                  resumeURL: url
-                })
-                .then(() => {
-                  this.setState({ loading: false });
-                });
-            });
-          })
-          .catch(error => {
-            this.setState({ loading: false });
-          });
-      }
-    }
-  }
-
-  companyUpload() {
-    //This code could be much cleaner, will do so later
-    var jobListingsEmpty = false;
-    for (var job of this.state.jobs) {
-      if (job.description === "" || job.title === "") {
-        jobListingsEmpty = true;
-      }
-    }
-    if (
-      this.state.companyName === "" ||
-      this.state.companyURL === "" ||
-      jobListingsEmpty
-    ) {
-      // Set error state, display on screen
-    } else {
-      this.setState({ loading: true });
-      const {
-        companyName,
-        companyURL,
-        companyPhoto,
-        jobs,
-        companyPhotoURL
-      } = this.state;
-      if (this.state.companyPhoto === null) {
-        var updates = {};
-        for (var job of this.state.jobs) {
-          job.companyName = companyName;
-          job.companyURL = companyURL;
-          job.companyPhotoURL = this.state.companyPhotoURL;
-          job.postKey = firebase
-            .database()
-            .ref()
-            .child("jobs")
-            .push().key;
-          updates["/jobs/" + job.postKey] = job;
-        }
-        firebase
-          .database()
-          .ref("employers/" + this.state.uid)
-          .set({ companyName, companyURL, jobs, companyPhotoURL })
-          .then(() => {
+          } = this.state;
+          this.setState({ loading: true });
+          if (this.state.resume === null) {
             firebase
               .database()
-              .ref()
-              .update(updates)
+              .ref("students/" + user.uid)
+              .set({
+                firstName,
+                lastName,
+                grade,
+                linkedin,
+                github,
+                resumeURL,
+                email: user.email
+              })
               .then(() => {
                 this.setState({ loading: false });
+              })
+              .catch(error => {
+                this.setState({ loading: false });
               });
-          })
-          .catch(error => {
-            this.setState({ loading: false });
-          });
-      } else {
-        const logo = firebase
-          .storage()
-          .ref()
-          .child(this.state.uid + "/logo");
-        logo
-          .put(this.state.companyPhoto)
-          .then(snapshot => {
-            logo.getDownloadURL().then(url => {
-              this.setState({ companyPhotoURL: url });
-              var updates = {};
-              for (var job of this.state.jobs) {
-                job.companyName = companyName;
-                job.companyURL = companyURL;
-                job.companyPhotoURL = this.state.companyPhotoURL;
-                job.postKey = firebase
-                  .database()
-                  .ref()
-                  .child("jobs")
-                  .push().key;
-                updates["/jobs/" + job.postKey] = job;
-              }
-              firebase
-                .database()
-                .ref("employers/" + this.state.uid)
-                .set({
-                  companyName,
-                  companyURL,
-                  jobs,
-                  companyPhotoURL: this.state.companyPhotoURL
-                })
-                .then(() => {
+          } else {
+            const resumeRef = firebase
+              .storage()
+              .ref()
+              .child(user.uid + "/resume.pdf");
+            resumeRef
+              .put(this.state.resume)
+              .then(snapshot => {
+                resumeRef.getDownloadURL().then(url => {
+                  this.setState({ resumeURL: url });
                   firebase
                     .database()
-                    .ref()
-                    .update(updates)
+                    .ref("students/" + user.uid)
+                    .set({
+                      firstName,
+                      lastName,
+                      grade,
+                      linkedin,
+                      github,
+                      resumeURL: url
+                    })
                     .then(() => {
                       this.setState({ loading: false });
                     });
                 });
-            });
-          })
-          .catch(error => {
-            this.setState({ loading: false });
-          });
+              })
+              .catch(error => {
+                this.setState({ loading: false });
+              });
+          }
+        }
+      } else {
+        this.signOut();
       }
-    }
+    });
+  }
+
+  companyUpload() {
+    firebase.auth().onAuthStateChanged(user => {
+      if (user) {
+        var jobListingsEmpty = false;
+        for (var job of this.state.jobs) {
+          if (job.description === "" || job.title === "") {
+            jobListingsEmpty = true;
+          }
+        }
+        if (
+          this.state.companyName === "" ||
+          this.state.companyURL === "" ||
+          jobListingsEmpty
+        ) {
+          // Set error state, display on screen
+        } else {
+          this.setState({ loading: true });
+          const {
+            companyName,
+            companyURL,
+            companyPhoto,
+            jobs,
+            companyPhotoURL
+          } = this.state;
+          if (this.state.companyPhoto === null) {
+            var updates = {};
+            for (var job of this.state.jobs) {
+              job.companyName = companyName;
+              job.companyURL = companyURL;
+              job.companyPhotoURL = this.state.companyPhotoURL;
+              job.postKey = firebase
+                .database()
+                .ref()
+                .child("jobs")
+                .push().key;
+              updates["/jobs/" + job.postKey] = job;
+            }
+            firebase
+              .database()
+              .ref("employers/" + user.uid)
+              .set({ companyName, companyURL, jobs, companyPhotoURL })
+              .then(() => {
+                firebase
+                  .database()
+                  .ref()
+                  .update(updates)
+                  .then(() => {
+                    this.setState({ loading: false });
+                  });
+              })
+              .catch(error => {
+                this.setState({ loading: false });
+              });
+          } else {
+            const logo = firebase
+              .storage()
+              .ref()
+              .child(user.uid + "/logo");
+            logo
+              .put(this.state.companyPhoto)
+              .then(snapshot => {
+                logo.getDownloadURL().then(url => {
+                  this.setState({ companyPhotoURL: url });
+                  var updates = {};
+                  for (var job of this.state.jobs) {
+                    job.companyName = companyName;
+                    job.companyURL = companyURL;
+                    job.companyPhotoURL = this.state.companyPhotoURL;
+                    job.postKey = firebase
+                      .database()
+                      .ref()
+                      .child("jobs")
+                      .push().key;
+                    updates["/jobs/" + job.postKey] = job;
+                  }
+                  firebase
+                    .database()
+                    .ref("employers/" + user.uid)
+                    .set({
+                      companyName,
+                      companyURL,
+                      jobs,
+                      companyPhotoURL: this.state.companyPhotoURL
+                    })
+                    .then(() => {
+                      firebase
+                        .database()
+                        .ref()
+                        .update(updates)
+                        .then(() => {
+                          this.setState({ loading: false });
+                        });
+                    });
+                });
+              })
+              .catch(error => {
+                this.setState({ loading: false });
+              });
+          }
+        }
+      } else {
+        this.signOut();
+      }
+    });
   }
 
   updateProfile() {
@@ -293,14 +331,42 @@ export default class App extends Component {
       .auth()
       .signInWithEmailAndPassword(email, password)
       .then(user => {
-        this.setState(prevState => {
-          return {
-            loggedIn: true,
-            uid: user.user.uid,
-            loading: false,
-            error: ""
-          };
-        });
+        if (this.state.student) {
+          firebase
+            .database()
+            .ref("/students/" + user.user.uid)
+            .once("value")
+            .then(snapshot => {
+              var info = snapshot.val();
+              this.setState({
+                loggedIn: true,
+                loading: false,
+                uid: user.user.uid,
+                firstName: info.firstName,
+                lastName: info.lastName,
+                github: info.github,
+                linkedin: info.linkedin,
+                resumeURL: info.resumeURL
+              });
+            });
+        } else {
+          firebase
+            .database()
+            .ref("/employers/" + user.user.uid)
+            .once("value")
+            .then(snapshot => {
+              var info = snapshot.val();
+              this.setState({
+                loggedIn: true,
+                loading: false,
+                uid: user.user.uid,
+                companyName: info.companyName,
+                companyURL: info.companyURL,
+                companyPhotoURL: info.companyPhotoURL,
+                jobs: info.jobs
+              });
+            });
+        }
       })
       .catch(error => {
         var errorCode = error.code;
