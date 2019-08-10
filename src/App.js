@@ -106,33 +106,113 @@ export default class App extends Component {
     });
   }
 
-  cancelEdits() {}
+  cancelEdits() {
+    this.setState({ loading: true });
+    firebase.auth().onAuthStateChanged(user => {
+      if (user) {
+        if (this.state.student) {
+          firebase
+            .database()
+            .ref("/students/" + user.uid)
+            .once("value")
+            .then(snapshot => {
+              var info = snapshot.val();
+              this.setState({
+                student: true,
+                loggedIn: true,
+                loading: false,
+                uid: user.uid,
+                firstName: info.firstName === null ? "" : info.firstName,
+                lastName: info.lastName === null ? "" : info.lastName,
+                github: info.github === null ? "" : info.github,
+                linkedin: info.linkedin === null ? "" : info.linkedin,
+                resumeURL: info.resumeURL === null ? "" : info.resumeURL
+              });
+            });
+        } else {
+          firebase
+            .database()
+            .ref("/employers/" + user.uid)
+            .once("value")
+            .then(snapshot => {
+              var info = snapshot.val();
+              this.setState({
+                student: false,
+                loggedIn: true,
+                loading: false,
+                uid: user.uid,
+                companyName: info.companyName === null ? "" : info.companyName,
+                companyURL: info.companyURL === null ? "" : info.companyURL,
+                companyPhotoURL:
+                  info.companyPhotoURL === null ? "" : info.companyPhotoURL,
+                jobs: info.jobs === null ? [] : info.jobs
+              });
+            });
+        }
+      } else {
+        this.setState({ loading: false });
+        this.signOut();
+      }
+    });
+  }
 
   signOut() {
-    this.setState(prevState => {
-      return {
-        loggedIn: false,
-        email: "",
-        password: "",
-        student: prevState.student,
-        registration: prevState.registration,
-        uid: "",
-        loading: false,
-        error: "",
-        firstName: "",
-        lastName: "",
-        grade: "freshman",
-        resume: "",
-        linkedin: "",
-        github: "",
-        resumeURL: "",
-        companyName: "",
-        companyURL: "",
-        companyPhoto: "",
-        companyPhotoURL: "",
-        jobs: []
-      };
-    });
+    this.setState({ loading: true });
+    firebase
+      .auth()
+      .signOut()
+      .then(() => {
+        this.setState(prevState => {
+          return {
+            loggedIn: false,
+            email: "",
+            password: "",
+            student: prevState.student,
+            registration: prevState.registration,
+            uid: "",
+            loading: false,
+            error: "",
+            firstName: "",
+            lastName: "",
+            grade: "freshman",
+            resume: "",
+            linkedin: "",
+            github: "",
+            resumeURL: "",
+            companyName: "",
+            companyURL: "",
+            companyPhoto: "",
+            companyPhotoURL: "",
+            jobs: []
+          };
+        });
+      })
+      .catch(function(error) {
+        this.setState(prevState => {
+          return {
+            loggedIn: false,
+            email: "",
+            password: "",
+            student: prevState.student,
+            registration: prevState.registration,
+            uid: "",
+            loading: false,
+            error: "",
+            firstName: "",
+            lastName: "",
+            grade: "freshman",
+            resume: "",
+            linkedin: "",
+            github: "",
+            resumeURL: "",
+            companyName: "",
+            companyURL: "",
+            companyPhoto: "",
+            companyPhotoURL: "",
+            jobs: []
+          };
+        });
+      });
   }
 
   addJob(title, description) {
