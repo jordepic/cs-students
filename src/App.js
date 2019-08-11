@@ -8,6 +8,7 @@ import "firebase/auth";
 import "firebase/database";
 import "firebase/storage";
 import EditProfile from "./components/EditProfile";
+import JobScreen from "./components/JobScreen";
 
 export default class App extends Component {
   state = {
@@ -610,7 +611,7 @@ export default class App extends Component {
                 cancelEdits={this.cancelEdits}
               />
             ) : (
-              ""
+              <JobScreen />
             )
           ) : (
             <LoginForm
