@@ -1,5 +1,5 @@
 import React, { Component } from "react";
-import { Card, Image, Row, Col, Button } from "react-bootstrap";
+import { Card, Image, Row, Col, Button, Figure } from "react-bootstrap";
 import styled from "styled-components";
 
 class SingleJobView extends Component {
@@ -13,6 +13,20 @@ class SingleJobView extends Component {
   `;
   CompanyName = styled(Card.Title)`
     font-size: 2rem;
+  `;
+
+  ImageHolder = styled.div`
+    height: 50px;
+    width: auto;
+    margin-left: auto;
+  `;
+
+  ScaleImage = styled(Image)`
+    max-width: 100%;
+    max-height: 100%;
+    margin-left: auto;
+    padding: 10%;
+    display: block;
   `;
 
   render() {
@@ -34,16 +48,17 @@ class SingleJobView extends Component {
                   </this.CompanyName>
                 </this.CompanyLink>
               </Col>
-              <Col md={3}>
-                <Image
-                  src={
-                    this.props.job
-                      ? this.props.job.imgLink
-                      : "https://mycareersdb.com/users/default/no_avatar_company.png"
-                  }
-                  fluid
-                  thumbnail
-                />
+              <Col md={4}>
+                <this.ImageHolder img="https://mycareersdb.com/users/default/no_avatar_company.png">
+                  <this.ScaleImage
+                    src={
+                      this.props.job
+                        ? this.props.job.imgLink
+                        : "https://mycareersdb.com/users/default/no_avatar_company.png"
+                    }
+                    thumbnail
+                  />
+                </this.ImageHolder>
               </Col>
             </Row>
           </Card.Header>
