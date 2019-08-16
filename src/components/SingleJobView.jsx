@@ -1,27 +1,48 @@
 import React, { Component } from "react";
-import { Form, Button, Container, Row, Card, Image } from "react-bootstrap";
+import { Card, Image, Row, Col } from "react-bootstrap";
 
 class SingleJobView extends Component {
   render() {
     return (
       <div>
-        <Card bg="light">
+        <Card bg="light" className="m-3">
           <Card.Header>
-            <Image
-              src="https://mycareersdb.com/users/default/no_avatar_company.png"
-              fluid="fluid"
-            />
-            <a>Company name here</a>
+            <Row>
+              <Col md={3}>
+                <Image
+                  src={
+                    this.props.job
+                      ? this.props.job.imgLink
+                      : "https://mycareersdb.com/users/default/no_avatar_company.png"
+                  }
+                  fluid
+                  thumbnail
+                />
+              </Col>
+              <Col>
+                <a
+                  href={
+                    this.props.job ? this.props.job.companyUrl : "google.com"
+                  }
+                >
+                  <h2>
+                    {this.props.job
+                      ? this.props.job.companyName
+                      : "Company Title"}
+                  </h2>
+                </a>
+              </Col>
+            </Row>
           </Card.Header>
           <Card.Body>
-            <Card.Title>Example Job Title</Card.Title>
+            <Card.Title>
+              {this.props.job ? this.props.job.title : "Job Title"}
+            </Card.Title>
             <Card.Text>
-              Example Job Description. As you can see I am purposely trying to
-              make it go multiple lines, as a normal job description might do.
+              {this.props.job ? this.props.job.description : "Job description"}
             </Card.Text>
           </Card.Body>
         </Card>
-        <br />
       </div>
     );
   }
