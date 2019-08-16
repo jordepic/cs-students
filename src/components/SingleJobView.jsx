@@ -51,7 +51,7 @@ class SingleJobView extends Component {
                   <this.ScaleImage
                     src={
                       this.props.job
-                        ? this.props.job.imgLink
+                        ? this.props.job.companyPhotoURL
                         : "https://mycareersdb.com/users/default/no_avatar_company.png"
                     }
                     thumbnail="thumbnail"

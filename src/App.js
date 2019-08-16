@@ -97,7 +97,8 @@ export default class App extends Component {
                 companyURL: info.companyURL === null ? "" : info.companyURL,
                 companyPhotoURL:
                   info.companyPhotoURL === null ? "" : info.companyPhotoURL,
-                jobs: info.jobs === null ? [] : info.jobs
+                jobs:
+                  info.jobs === null || info.jobs === undefined ? [] : info.jobs
               });
             }
           });
