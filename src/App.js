@@ -594,7 +594,7 @@ export default class App extends Component {
       >
         <Row noGutters="true">
           <Col xl={true}>
-            <Navbar />
+            <Navbar loggedIn={this.state.loggedIn} signOut={this.signOut} />
           </Col>
         </Row>
         <Row noGutters="true">
