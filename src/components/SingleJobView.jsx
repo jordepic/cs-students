@@ -1,13 +1,39 @@
 import React, { Component } from "react";
-import { Card, Image, Row, Col } from "react-bootstrap";
+import { Card, Image, Row, Col, Button } from "react-bootstrap";
+import styled from "styled-components";
 
 class SingleJobView extends Component {
+  CompanyLink = styled.a`
+    color: black;
+    height: 100%;
+
+    &:hover {
+      color: black;
+    }
+  `;
+  CompanyName = styled(Card.Title)`
+    font-size: 2rem;
+  `;
+
   render() {
     return (
       <div>
         <Card bg="light" className="m-3">
-          <Card.Header>
+          <Card.Header flex>
             <Row>
+              <Col>
+                <this.CompanyLink
+                  href={
+                    this.props.job ? this.props.job.companyUrl : "google.com"
+                  }
+                >
+                  <this.CompanyName>
+                    {this.props.job
+                      ? this.props.job.companyName
+                      : "Company Title"}
+                  </this.CompanyName>
+                </this.CompanyLink>
+              </Col>
               <Col md={3}>
                 <Image
                   src={
@@ -19,19 +45,6 @@ class SingleJobView extends Component {
                   thumbnail
                 />
               </Col>
-              <Col>
-                <a
-                  href={
-                    this.props.job ? this.props.job.companyUrl : "google.com"
-                  }
-                >
-                  <h2>
-                    {this.props.job
-                      ? this.props.job.companyName
-                      : "Company Title"}
-                  </h2>
-                </a>
-              </Col>
             </Row>
           </Card.Header>
           <Card.Body>
@@ -41,6 +54,9 @@ class SingleJobView extends Component {
             <Card.Text>
               {this.props.job ? this.props.job.description : "Job description"}
             </Card.Text>
+            <Button variant="primary" block>
+              Apply Now!
+            </Button>
           </Card.Body>
         </Card>
       </div>
