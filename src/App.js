@@ -9,6 +9,7 @@ import "firebase/database";
 import "firebase/storage";
 import EditProfile from "./components/EditProfile";
 import JobScreen from "./components/JobScreen";
+import LoadingModal from "./components/LoadingModal";
 
 export default class App extends Component {
   state = {
@@ -654,7 +655,8 @@ export default class App extends Component {
             />
           )}
         </Row>
-        {this.state.loading ? <div className="spinner-border"></div> : ""}
+        {/* {this.state.loading ? <div className="spinner-border"></div> : ""} */}
+        <LoadingModal show={this.state.loading}></LoadingModal>
       </Container>
     );
   }
