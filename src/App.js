@@ -122,7 +122,7 @@ export default class App extends Component {
         //     jobs.push(prop)
         //   }
         // }
-        this.setState({ loading: false, jobListings: jobs });
+        this.setState({ loading: false });
       })
       .catch(error => {
         this.setState({ loading: false });
@@ -633,7 +633,10 @@ export default class App extends Component {
                 cancelEdits={this.cancelEdits}
               />
             ) : (
-              <JobScreen loadJobListings={this.loadJobListings} />
+              <JobScreen
+                loadJobListings={this.loadJobListings}
+                jobs={this.props.jobListings}
+              />
             )
           ) : (
             <LoginForm
