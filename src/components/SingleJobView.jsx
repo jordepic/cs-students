@@ -1,27 +1,64 @@
 import React, { Component } from "react";
-import { Form, Button, Container, Row, Card, Image } from "react-bootstrap";
+import { Card, Image, Row, Col, Button } from "react-bootstrap";
+import styled from "styled-components";
 
 class SingleJobView extends Component {
+  CompanyLink = styled.a`
+    color: black;
+    height: 100%;
+
+    &:hover {
+      color: black;
+    }
+  `;
+  CompanyName = styled(Card.Title)`
+    font-size: 2rem;
+  `;
+
   render() {
     return (
       <div>
-        <Card bg="light">
-          <Card.Header>
-            <Image
-              src="https://mycareersdb.com/users/default/no_avatar_company.png"
-              fluid="fluid"
-            />
-            <a>Company name here</a>
+        <Card bg="light" className="m-3">
+          <Card.Header flex>
+            <Row>
+              <Col>
+                <this.CompanyLink
+                  href={
+                    this.props.job ? this.props.job.companyUrl : "google.com"
+                  }
+                >
+                  <this.CompanyName>
+                    {this.props.job
+                      ? this.props.job.companyName
+                      : "Company Title"}
+                  </this.CompanyName>
+                </this.CompanyLink>
+              </Col>
+              <Col md={3}>
+                <Image
+                  src={
+                    this.props.job
+                      ? this.props.job.imgLink
+                      : "https://mycareersdb.com/users/default/no_avatar_company.png"
+                  }
+                  fluid
+                  thumbnail
+                />
+              </Col>
+            </Row>
           </Card.Header>
           <Card.Body>
-            <Card.Title>Example Job Title</Card.Title>
+            <Card.Title>
+              {this.props.job ? this.props.job.title : "Job Title"}
+            </Card.Title>
             <Card.Text>
-              Example Job Description. As you can see I am purposely trying to
-              make it go multiple lines, as a normal job description might do.
+              {this.props.job ? this.props.job.description : "Job description"}
             </Card.Text>
+            <Button variant="primary" block>
+              Apply Now!
+            </Button>
           </Card.Body>
         </Card>
-        <br />
       </div>
     );
   }
