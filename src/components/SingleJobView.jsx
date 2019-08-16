@@ -33,13 +33,11 @@ class SingleJobView extends Component {
     return (
       <div>
         <Card bg="light" className="m-3">
-          <Card.Header flex>
+          <Card.Header flex="flex">
             <Row>
               <Col>
                 <this.CompanyLink
-                  href={
-                    this.props.job ? this.props.job.companyUrl : "google.com"
-                  }
+                  href={this.props.job ? this.props.job.companyURL : "#"}
                 >
                   <this.CompanyName>
                     {this.props.job
@@ -56,7 +54,7 @@ class SingleJobView extends Component {
                         ? this.props.job.imgLink
                         : "https://mycareersdb.com/users/default/no_avatar_company.png"
                     }
-                    thumbnail
+                    thumbnail="thumbnail"
                   />
                 </this.ImageHolder>
               </Col>
@@ -69,7 +67,7 @@ class SingleJobView extends Component {
             <Card.Text>
               {this.props.job ? this.props.job.description : "Job description"}
             </Card.Text>
-            <Button variant="primary" block>
+            <Button variant="primary" block="block">
               Apply Now!
             </Button>
           </Card.Body>
