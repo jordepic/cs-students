@@ -31,7 +31,8 @@ export default class App extends Component {
     companyURL: "",
     companyPhoto: "",
     companyPhotoURL: "",
-    jobs: []
+    jobs: [],
+    jobListings: []
   };
 
   constructor() {
@@ -53,59 +54,80 @@ export default class App extends Component {
     this.companyUpload = this.companyUpload.bind(this);
     this.signOut = this.signOut.bind(this);
     this.cancelEdits = this.cancelEdits.bind(this);
+    this.loadJobListings = this.loadJobListings.bind(this);
   }
 
-  // componentDidMount() {
-  //   this.setState({ loading: true });
-  //   firebase.auth().onAuthStateChanged(user => {
-  //     if (user) {
-  //       firebase
-  //         .database()
-  //         .ref("/employers/" + user.uid)
-  //         .once("value")
-  //         .then(snapshot => {
-  //           var info = snapshot.val();
-  //           if (info === null) {
-  //             firebase
-  //               .database()
-  //               .ref("/students/" + user.uid)
-  //               .once("value")
-  //               .then(snapshot => {
-  //                 var info = snapshot.val();
-  //                 this.setState({
-  //                   student: true,
-  //                   loggedIn: true,
-  //                   loading: false,
-  //                   uid: user.uid,
-  //                   firstName: info.firstName === null ? "" : info.firstName,
-  //                   lastName: info.lastName === null ? "" : info.lastName,
-  //                   github: info.github === null ? "" : info.github,
-  //                   linkedin: info.linkedin === null ? "" : info.linkedin,
-  //                   resumeURL: info.resumeURL === null ? "" : info.resumeURL
-  //                 });
-  //               });
-  //           } else {
-  //             this.setState({
-  //               student: false,
-  //               loggedIn: true,
-  //               loading: false,
-  //               uid: user.uid,
-  //               companyName: info.companyName === null ? "" : info.companyName,
-  //               companyURL: info.companyURL === null ? "" : info.companyURL,
-  //               companyPhotoURL:
-  //                 info.companyPhotoURL === null ? "" : info.companyPhotoURL,
-  //               jobs: info.jobs === null ? [] : info.jobs
-  //             });
-  //           }
-  //         });
-  //       this.setState(prevState => {
-  //         return { loggedIn: true, loading: false };
-  //       });
-  //     } else {
-  //       this.setState({ loading: false });
-  //     }
-  //   });
-  // }
+  componentDidMount() {
+    this.setState({ loading: true });
+    firebase.auth().onAuthStateChanged(user => {
+      if (user) {
+        firebase
+          .database()
+          .ref("/employers/" + user.uid)
+          .once("value")
+          .then(snapshot => {
+            var info = snapshot.val();
+            if (info === null) {
+              firebase
+                .database()
+                .ref("/students/" + user.uid)
+                .once("value")
+                .then(snapshot => {
+                  var info = snapshot.val();
+                  this.setState({
+                    student: true,
+                    loggedIn: true,
+                    loading: false,
+                    uid: user.uid,
+                    firstName: info.firstName === null ? "" : info.firstName,
+                    lastName: info.lastName === null ? "" : info.lastName,
+                    github: info.github === null ? "" : info.github,
+                    linkedin: info.linkedin === null ? "" : info.linkedin,
+                    resumeURL: info.resumeURL === null ? "" : info.resumeURL
+                  });
+                });
+            } else {
+              this.setState({
+                student: false,
+                loggedIn: true,
+                loading: false,
+                uid: user.uid,
+                companyName: info.companyName === null ? "" : info.companyName,
+                companyURL: info.companyURL === null ? "" : info.companyURL,
+                companyPhotoURL:
+                  info.companyPhotoURL === null ? "" : info.companyPhotoURL,
+                jobs: info.jobs === null ? [] : info.jobs
+              });
+            }
+          });
+        this.setState(prevState => {
+          return { loggedIn: true, loading: false };
+        });
+      } else {
+        this.setState({ loading: false });
+      }
+    });
+  }
+
+  loadJobListings() {
+    this.setState({ loading: true });
+    firebase
+      .database()
+      .ref("jobs")
+      .once("value")
+      .then(snapshot => {
+        var jobs = [];
+        // for (var prop in ...snapshot.val) {
+        //   if (Object.prototype.hasOwnProperty.call(snapshot.val(), prop)) {
+        //     jobs.push(prop)
+        //   }
+        // }
+        this.setState({ loading: false, jobListings: jobs });
+      })
+      .catch(error => {
+        this.setState({ loading: false });
+      });
+  }
 
   cancelEdits() {
     this.setState({ loading: true });
@@ -611,7 +633,7 @@ export default class App extends Component {
                 cancelEdits={this.cancelEdits}
               />
             ) : (
-              <JobScreen />
+              <JobScreen loadJobListings={this.loadJobListings} />
             )
           ) : (
             <LoginForm
