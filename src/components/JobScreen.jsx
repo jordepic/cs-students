@@ -1,8 +1,15 @@
 import React, { Component } from "react";
 import { Form, Button, Container, Row, Card, Col } from "react-bootstrap";
 import SingleJobView from "./SingleJobView";
+import firebase from "firebase/app";
 
 class JobScreen extends Component {
+  jobListings = [];
+
+  componentWillMount() {
+    this.props.loadJobListings();
+  }
+
   render() {
     return (
       <Container
