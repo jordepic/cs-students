@@ -117,12 +117,12 @@ export default class App extends Component {
       .once("value")
       .then(snapshot => {
         var jobs = [];
-        // for (var prop in ...snapshot.val) {
-        //   if (Object.prototype.hasOwnProperty.call(snapshot.val(), prop)) {
-        //     jobs.push(prop)
-        //   }
-        // }
-        this.setState({ loading: false });
+        for (var prop in snapshot.val()) {
+          if (Object.prototype.hasOwnProperty.call(snapshot.val(), prop)) {
+            jobs.push(snapshot.val()[prop]);
+          }
+        }
+        this.setState({ loading: false, jobListings: jobs });
       })
       .catch(error => {
         this.setState({ loading: false });
@@ -635,7 +635,7 @@ export default class App extends Component {
             ) : (
               <JobScreen
                 loadJobListings={this.loadJobListings}
-                jobs={this.props.jobListings}
+                jobs={this.state.jobListings}
               />
             )
           ) : (
