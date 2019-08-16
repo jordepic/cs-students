@@ -12,12 +12,11 @@ class JobScreen extends Component {
         }}
       >
         <Row noGutters="true">
-          <Col></Col>
-          <Col xs={5}>
-            <br />
-            <SingleJobView />
-          </Col>
-          <Col></Col>
+          {this.props.jobs.map(job => (
+            <Col md={4}>
+              <SingleJobView job={job} />
+            </Col>
+          ))}
         </Row>
       </Container>
     );
