@@ -67,9 +67,25 @@ class SingleJobView extends Component {
             <Card.Text>
               {this.props.job ? this.props.job.description : "Job description"}
             </Card.Text>
-            <Button variant="primary" block="block">
-              Apply Now!
-            </Button>
+            {this.props.job.applied ? (
+              <Button
+                variant="outline-primary"
+                block="block"
+                disabled="disabled"
+              >
+                Already Applied!
+              </Button>
+            ) : (
+              <Button
+                variant="primary"
+                onClick={() =>
+                  this.props.apply(this.props.job.postKey, this.props.id)
+                }
+                block="block"
+              >
+                Apply Now!
+              </Button>
+            )}
           </Card.Body>
         </Card>
       </div>

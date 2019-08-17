@@ -17,7 +17,11 @@ class JobScreen extends Component {
         <Row noGutters="true">
           {this.props.jobs.map(job => (
             <Col md={4}>
-              <SingleJobView job={job} />
+              <SingleJobView
+                id={this.props.jobs.indexOf(job)}
+                apply={this.props.apply}
+                job={job}
+              />
             </Col>
           ))}
         </Row>

@@ -56,6 +56,7 @@ export default class App extends Component {
     this.signOut = this.signOut.bind(this);
     this.cancelEdits = this.cancelEdits.bind(this);
     this.loadJobListings = this.loadJobListings.bind(this);
+    this.apply = this.apply.bind(this);
   }
 
   componentDidMount() {
@@ -111,24 +112,64 @@ export default class App extends Component {
     });
   }
 
+  apply(jobPostID, index) {
+    this.setState({ loading: true });
+    firebase.auth().onAuthStateChanged(user => {
+      if (user) {
+        firebase
+          .database()
+          .ref("jobs/" + jobPostID + "/applicants/" + user.uid)
+          .set(true)
+          .then(() => {
+            var modifiedJobs = this.state.jobListings;
+            modifiedJobs[index]["applied"] = true;
+            this.setState({ loading: false, jobListings: modifiedJobs });
+          })
+          .catch(error => {
+            this.setState({ loading: false });
+          });
+      } else {
+        this.setState({ loading: false });
+        this.signOut();
+      }
+    });
+  }
+
   loadJobListings() {
     this.setState({ loading: true });
-    firebase
-      .database()
-      .ref("jobs")
-      .once("value")
-      .then(snapshot => {
-        var jobs = [];
-        for (var prop in snapshot.val()) {
-          if (Object.prototype.hasOwnProperty.call(snapshot.val(), prop)) {
-            jobs.push(snapshot.val()[prop]);
-          }
-        }
-        this.setState({ loading: false, jobListings: jobs });
-      })
-      .catch(error => {
+    firebase.auth().onAuthStateChanged(user => {
+      if (user) {
+        firebase
+          .database()
+          .ref("jobs")
+          .once("value")
+          .then(snapshot => {
+            var jobs = [];
+            for (var prop in snapshot.val()) {
+              if (Object.prototype.hasOwnProperty.call(snapshot.val(), prop)) {
+                var job = snapshot.val()[prop];
+                if (
+                  snapshot.val()[prop]["applicants"] !== true &&
+                  (user.uid in snapshot.val()[prop]["applicants"] &&
+                    snapshot.val()[prop]["applicants"][user.uid] === true)
+                ) {
+                  job.applied = true;
+                } else {
+                  job.applied = false;
+                }
+                jobs.push(job);
+              }
+            }
+            this.setState({ loading: false, jobListings: jobs });
+          })
+          .catch(error => {
+            this.setState({ loading: false });
+          });
+      } else {
         this.setState({ loading: false });
-      });
+        this.signOut();
+      }
+    });
   }
 
   cancelEdits() {
@@ -366,6 +407,7 @@ export default class App extends Component {
               job.companyName = companyName;
               job.companyURL = companyURL;
               job.companyPhotoURL = this.state.companyPhotoURL;
+              job.applicants = true;
               job.postKey = firebase
                 .database()
                 .ref()
@@ -404,6 +446,7 @@ export default class App extends Component {
                     job.companyName = companyName;
                     job.companyURL = companyURL;
                     job.companyPhotoURL = this.state.companyPhotoURL;
+                    job.applicants = true;
                     job.postKey = firebase
                       .database()
                       .ref()
@@ -638,6 +681,7 @@ export default class App extends Component {
               <JobScreen
                 loadJobListings={this.loadJobListings}
                 jobs={this.state.jobListings}
+                apply={this.apply}
               />
             )
           ) : (
