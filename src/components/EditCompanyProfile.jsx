@@ -53,7 +53,7 @@ class EditCompanyProfile extends Component {
               </Form.Group>
 
               <Form.Group>
-                <Form.Label>Comapny URL</Form.Label>
+                <Form.Label>Company URL</Form.Label>
                 <Form.Control
                   name="companyURL"
                   placeholder="Company URL"

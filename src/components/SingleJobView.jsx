@@ -25,7 +25,7 @@ class SingleJobView extends Component {
     max-width: 100%;
     max-height: 100%;
     margin-left: auto;
-    padding: 10%;
+    padding: 0%;
     display: block;
   `;
 
