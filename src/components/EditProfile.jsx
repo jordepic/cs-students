@@ -30,6 +30,7 @@ class EditProfile extends Component {
             linkedin={this.props.info.linkedin}
             github={this.props.info.github}
             grade={this.props.info.grade}
+            school={this.props.info.school}
           />
         ) : (
           <EditCompanyProfile

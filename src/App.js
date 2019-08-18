@@ -33,7 +33,8 @@ export default class App extends Component {
     companyPhoto: "",
     companyPhotoURL: "",
     jobs: [],
-    jobListings: []
+    jobListings: [],
+    school: "Yale"
   };
 
   constructor() {
@@ -223,6 +224,7 @@ export default class App extends Component {
   }
 
   signOut() {
+    //Make sure to update to reflect defaults
     this.setState({ loading: true });
     firebase
       .auth()
@@ -309,7 +311,12 @@ export default class App extends Component {
   studentUpload() {
     firebase.auth().onAuthStateChanged(user => {
       if (user) {
-        if (this.state.lastName === "" || this.state.firstName === "") {
+        if (
+          this.state.lastName === "" ||
+          this.state.firstName === "" ||
+          this.state.grade === "" ||
+          this.state.school === ""
+        ) {
         } else {
           const {
             firstName,
@@ -318,10 +325,15 @@ export default class App extends Component {
             linkedin,
             github,
             resume,
-            resumeURL
+            resumeURL,
+            school
           } = this.state;
           this.setState({ loading: true });
-          if (this.state.resume === null) {
+          if (
+            this.state.resume === null ||
+            this.state.resume === "" ||
+            this.state.resume === undefined
+          ) {
             firebase
               .database()
               .ref("students/" + user.uid)
@@ -331,8 +343,9 @@ export default class App extends Component {
                 grade,
                 linkedin,
                 github,
-                resumeURL,
-                email: user.email
+                resumeURL: "",
+                email: user.email,
+                school
               })
               .then(() => {
                 this.setState({ loading: false });
@@ -359,7 +372,8 @@ export default class App extends Component {
                       grade,
                       linkedin,
                       github,
-                      resumeURL: url
+                      resumeURL: url,
+                      school
                     })
                     .then(() => {
                       this.setState({ loading: false });
@@ -401,12 +415,16 @@ export default class App extends Component {
             jobs,
             companyPhotoURL
           } = this.state;
-          if (this.state.companyPhoto === null) {
+          if (
+            this.state.companyPhoto === null ||
+            this.state.companyPhoto === "" ||
+            this.state.companyPhoto === undefined
+          ) {
             var updates = {};
             for (var job of this.state.jobs) {
               job.companyName = companyName;
               job.companyURL = companyURL;
-              job.companyPhotoURL = this.state.companyPhotoURL;
+              job.companyPhotoURL = "";
               job.applicants = true;
               job.postKey = firebase
                 .database()
@@ -572,34 +590,41 @@ export default class App extends Component {
     this.setState(prevState => {
       return { loading: true };
     });
-    firebase
-      .auth()
-      .createUserWithEmailAndPassword(email, password)
-      .then(user => {
-        if (this.state.student) {
-          firebase
-            .database()
-            .ref("students/" + user.user.uid)
-            .set(true);
-        } else {
-          firebase
-            .database()
-            .ref("employers/" + user.user.uid)
-            .set(true);
-        }
-        this.setState(prevState => {
-          return {
-            loggedIn: true,
-            uid: user.user.uid,
-            loading: false,
-            error: ""
-          };
+    if (this.state.email.includes(".edu") || this.state.student === false) {
+      firebase
+        .auth()
+        .createUserWithEmailAndPassword(email, password)
+        .then(user => {
+          if (this.state.student) {
+            firebase
+              .database()
+              .ref("students/" + user.user.uid)
+              .set(true);
+          } else {
+            firebase
+              .database()
+              .ref("employers/" + user.user.uid)
+              .set(true);
+          }
+          this.setState(prevState => {
+            return {
+              loggedIn: true,
+              uid: user.user.uid,
+              loading: false,
+              error: ""
+            };
+          });
+        })
+        .catch(error => {
+          var errorCode = error.code;
+          this.setError(errorCode);
         });
-      })
-      .catch(error => {
-        var errorCode = error.code;
-        this.setError(errorCode);
+    } else {
+      this.setState({
+        loading: false,
+        error: "Must have valid .edu email to register"
       });
+    }
   }
 
   setError(code) {

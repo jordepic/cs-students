@@ -52,6 +52,27 @@ class EditStudentProfile extends Component {
               </Form.Group>
 
               <Form.Group controlId="exampleForm.ControlSelect1">
+                <Form.Label>Select College</Form.Label>
+                <Form.Control
+                  as="select"
+                  name="school"
+                  onChange={event => this.props.handleUserInfoChange(event)}
+                  defaultValue={this.props.school}
+                >
+                  <option value="Yale">Yale</option>
+                  <option value="Columbia">Columbia</option>
+                  <option value="Cornell">Cornell</option>
+                </Form.Control>
+                <Form.Text
+                  style={{
+                    color: "red"
+                  }}
+                >
+                  *Required
+                </Form.Text>
+              </Form.Group>
+
+              <Form.Group controlId="exampleForm.ControlSelect1">
                 <Form.Label>Select School Year</Form.Label>
                 <Form.Control
                   as="select"
