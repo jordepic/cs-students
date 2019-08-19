@@ -21,7 +21,7 @@ export default class AllApplicants extends Component {
       >
         <Row>
           <Col></Col>
-          <Col xs={8}>{applicantTables}</Col>
+          <Col xs={10}>{applicantTables}</Col>
           <Col></Col>
         </Row>
       </Container>
