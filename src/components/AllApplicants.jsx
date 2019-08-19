@@ -5,7 +5,12 @@ import ApplicantTable from "./ApplicantTable";
 export default class AllApplicants extends Component {
   render() {
     const applicantTables = this.props.jobs.map(job => (
-      <ApplicantTable key={job.postKey} id={job.postKey} title={job.title} />
+      <ApplicantTable
+        key={job.postKey}
+        id={job.postKey}
+        title={job.title}
+        applicants={job.applicants}
+      />
     ));
     return (
       <Container
@@ -16,7 +21,7 @@ export default class AllApplicants extends Component {
       >
         <Row>
           <Col></Col>
-          <Col xs={6}>{applicantTables}</Col>
+          <Col xs={8}>{applicantTables}</Col>
           <Col></Col>
         </Row>
       </Container>
