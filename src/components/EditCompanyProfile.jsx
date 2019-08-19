@@ -51,7 +51,6 @@ class EditCompanyProfile extends Component {
                   *Required
                 </Form.Text>
               </Form.Group>
-
               <Form.Group>
                 <Form.Label>Company URL</Form.Label>
                 <Form.Control
@@ -68,7 +67,6 @@ class EditCompanyProfile extends Component {
                   *Required
                 </Form.Text>
               </Form.Group>
-
               <Form.Group>
                 <Form.Label>
                   Company Logo (If no file is selected existing logo will not be
@@ -83,7 +81,6 @@ class EditCompanyProfile extends Component {
                 />
                 <Form.Text className="text-muted">Must be an image</Form.Text>
               </Form.Group>
-
               <Button
                 variant="dark"
                 onClick={() => this.props.addJob("", "")}
@@ -91,10 +88,7 @@ class EditCompanyProfile extends Component {
               >
                 Add Job Listing
               </Button>
-
-              <br />
-
-              <ul>{jobs}</ul>
+              <br /> {jobs}
             </Form>
           </Col>
           <Col></Col>
