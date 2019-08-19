@@ -91,6 +91,15 @@ export default class App extends Component {
                   });
                 });
             } else {
+              var jobs = [];
+              if (info.jobs !== null && info.jobs !== undefined) {
+                for (var prop in info.jobs) {
+                  if (Object.prototype.hasOwnProperty.call(info.jobs, prop)) {
+                    var job = info.jobs[prop];
+                    jobs.push(job);
+                  }
+                }
+              }
               this.setState({
                 student: false,
                 loggedIn: true,
@@ -100,8 +109,7 @@ export default class App extends Component {
                 companyURL: info.companyURL === null ? "" : info.companyURL,
                 companyPhotoURL:
                   info.companyPhotoURL === null ? "" : info.companyPhotoURL,
-                jobs:
-                  info.jobs === null || info.jobs === undefined ? [] : info.jobs
+                jobs
               });
             }
           });
@@ -600,6 +608,15 @@ export default class App extends Component {
             .once("value")
             .then(snapshot => {
               var info = snapshot.val();
+              var jobs = [];
+              if (info.jobs !== null && info.jobs !== undefined) {
+                for (var prop in info.jobs) {
+                  if (Object.prototype.hasOwnProperty.call(info.jobs, prop)) {
+                    var job = info.jobs[prop];
+                    jobs.push(job);
+                  }
+                }
+              }
               this.setState({
                 loggedIn: true,
                 loading: false,
