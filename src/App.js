@@ -10,6 +10,7 @@ import "firebase/storage";
 import EditProfile from "./components/EditProfile";
 import JobScreen from "./components/JobScreen";
 import LoadingModal from "./components/LoadingModal";
+import AllApplicants from "./components/AllApplicants";
 
 export default class App extends Component {
   state = {
@@ -113,7 +114,7 @@ export default class App extends Component {
     });
   }
 
-  apply(jobPostID, index) {
+  apply(jobPostID, index, companyID) {
     this.setState({ loading: true });
     firebase.auth().onAuthStateChanged(user => {
       if (user) {
@@ -122,9 +123,22 @@ export default class App extends Component {
           .ref("jobs/" + jobPostID + "/applicants/" + user.uid)
           .set(true)
           .then(() => {
-            var modifiedJobs = this.state.jobListings;
-            modifiedJobs[index]["applied"] = true;
-            this.setState({ loading: false, jobListings: modifiedJobs });
+            firebase
+              .database()
+              .ref(
+                "employers/" +
+                  companyID +
+                  "/jobs/" +
+                  jobPostID +
+                  "/applicants/" +
+                  user.uid
+              )
+              .set(true)
+              .then(() => {
+                var modifiedJobs = this.state.jobListings;
+                modifiedJobs[index]["applied"] = true;
+                this.setState({ loading: false, jobListings: modifiedJobs });
+              });
           })
           .catch(error => {
             this.setState({ loading: false });
@@ -431,19 +445,31 @@ export default class App extends Component {
                 .ref()
                 .child("jobs")
                 .push().key;
+              job.companyID = user.uid;
               updates["/jobs/" + job.postKey] = job;
             }
             firebase
               .database()
               .ref("employers/" + user.uid)
-              .set({ companyName, companyURL, jobs, companyPhotoURL })
+              .set({
+                companyName,
+                companyURL,
+                companyPhotoURL: "",
+                email: user.email
+              })
               .then(() => {
                 firebase
                   .database()
                   .ref()
                   .update(updates)
                   .then(() => {
-                    this.setState({ loading: false });
+                    firebase
+                      .database()
+                      .ref("employers/" + user.uid)
+                      .update(updates)
+                      .then(() => {
+                        this.setState({ loading: false });
+                      });
                   });
               })
               .catch(error => {
@@ -470,6 +496,7 @@ export default class App extends Component {
                       .ref()
                       .child("jobs")
                       .push().key;
+                    job.companyID = user.uid;
                     updates["/jobs/" + job.postKey] = job;
                   }
                   firebase
@@ -478,8 +505,8 @@ export default class App extends Component {
                     .set({
                       companyName,
                       companyURL,
-                      jobs,
-                      companyPhotoURL: this.state.companyPhotoURL
+                      companyPhotoURL: this.state.companyPhotoURL,
+                      email: user.email
                     })
                     .then(() => {
                       firebase
@@ -487,7 +514,13 @@ export default class App extends Component {
                         .ref()
                         .update(updates)
                         .then(() => {
-                          this.setState({ loading: false });
+                          firebase
+                            .database()
+                            .ref("employers/" + user.uid)
+                            .update(updates)
+                            .then(() => {
+                              this.setState({ loading: false });
+                            });
                         });
                     });
                 });
@@ -702,12 +735,14 @@ export default class App extends Component {
                 deleteJobListing={this.deleteJobListing}
                 cancelEdits={this.cancelEdits}
               />
-            ) : (
+            ) : this.state.student ? (
               <JobScreen
                 loadJobListings={this.loadJobListings}
                 jobs={this.state.jobListings}
                 apply={this.apply}
               />
+            ) : (
+              <AllApplicants jobs={this.state.jobs} />
             )
           ) : (
             <LoginForm

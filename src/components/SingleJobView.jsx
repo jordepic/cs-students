@@ -79,7 +79,11 @@ class SingleJobView extends Component {
               <Button
                 variant="primary"
                 onClick={() =>
-                  this.props.apply(this.props.job.postKey, this.props.id)
+                  this.props.apply(
+                    this.props.job.postKey,
+                    this.props.id,
+                    this.props.job.companyID
+                  )
                 }
                 block="block"
               >
