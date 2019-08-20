@@ -758,34 +758,37 @@ export default class App extends Component {
       >
         <Row noGutters="true">
           <Col xl={true}>
-            <Navbar loggedIn={this.state.loggedIn} signOut={this.signOut} />
+            <Navbar
+              loggedIn={this.state.loggedIn}
+              signOut={this.signOut}
+              student={this.state.student}
+              setFile={this.setFile}
+              handleUserInfoChange={this.handleUserInfoChange}
+              updateProfile={this.updateProfile}
+              info={this.state}
+              addJob={this.addJob}
+              handleJobListingChange={this.handleJobListingChange}
+              deleteJobListing={this.deleteJobListing}
+              cancelEdits={this.cancelEdits}
+              loadJobListings={this.loadJobListings}
+              jobs={this.state.jobs}
+              apply={this.apply}
+              loadApplicants={this.loadApplicants}
+              email={this.state.email}
+              password={this.state.password}
+              registration={this.state.registration}
+              handleAuthenticationTypeSwitch={
+                this.handleAuthenticationTypeSwitch
+              }
+              handleAuthentication={this.handleAuthentication}
+              handleUserSwitch={this.handleUserSwitch}
+              error={this.state.error}
+            />
           </Col>
         </Row>
         <Row noGutters="true">
           {this.state.loggedIn ? (
-            this.state.registration ? (
-              <EditProfile
-                setFile={this.setFile}
-                handleUserInfoChange={this.handleUserInfoChange}
-                updateProfile={this.updateProfile}
-                info={this.state}
-                addJob={this.addJob}
-                handleJobListingChange={this.handleJobListingChange}
-                deleteJobListing={this.deleteJobListing}
-                cancelEdits={this.cancelEdits}
-              />
-            ) : this.state.student ? (
-              <JobScreen
-                loadJobListings={this.loadJobListings}
-                jobs={this.state.jobListings}
-                apply={this.apply}
-              />
-            ) : (
-              <AllApplicants
-                jobs={this.state.jobs}
-                loadApplicants={this.loadApplicants}
-              />
-            )
+            ""
           ) : (
             <LoginForm
               email={this.state.email}
