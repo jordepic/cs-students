@@ -6,14 +6,24 @@ export default class ApplicantTable extends Component {
   render() {
     return (
       <tr>
-        <td>1</td>
-        <td>2</td>
-        <td>3</td>
-        <td>4</td>
-        <td>5</td>
-        <td>6</td>
-        <td>7</td>
-        <td>8</td>
+        <td>{`${this.props.applicant.firstName}
+        ${this.props.applicant.lastName}`}</td>
+        <td>{this.props.applicant.email}</td>
+        <td>{this.props.applicant.school}</td>
+        <td>{this.props.applicant.grade}</td>
+        <td>
+          <a href={this.props.applicant.linkedin}>
+            {this.props.applicant.linkedin}
+          </a>
+        </td>
+        <td>
+          <a href={this.props.applicant.github}>
+            {this.props.applicant.github}
+          </a>
+        </td>
+        <td>
+          <a href={this.props.applicant.resumeURL}>Resume</a>
+        </td>
       </tr>
     );
   }

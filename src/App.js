@@ -24,7 +24,7 @@ export default class App extends Component {
     error: "",
     firstName: "",
     lastName: "",
-    grade: "freshman",
+    grade: "Freshman",
     resume: null,
     linkedin: "",
     github: "",
@@ -59,6 +59,7 @@ export default class App extends Component {
     this.cancelEdits = this.cancelEdits.bind(this);
     this.loadJobListings = this.loadJobListings.bind(this);
     this.apply = this.apply.bind(this);
+    this.loadApplicants = this.loadApplicants.bind(this);
   }
 
   componentDidMount() {
@@ -120,6 +121,26 @@ export default class App extends Component {
         this.setState({ loading: false });
       }
     });
+  }
+
+  loadApplicants(uidArray) {
+    var applicants = [];
+    for (var uid of uidArray) {
+      this.setState({ loading: true });
+      firebase
+        .database()
+        .ref("students/" + uid)
+        .once("value")
+        .then(snapshot => {
+          applicants.push(snapshot.val());
+          this.setState({ loading: false });
+        })
+        .catch(error => {
+          this.setState({ loading: false });
+          return [];
+        });
+    }
+    return applicants;
   }
 
   apply(jobPostID, index, companyID) {
@@ -264,7 +285,7 @@ export default class App extends Component {
             error: "",
             firstName: "",
             lastName: "",
-            grade: "freshman",
+            grade: "Freshman",
             resume: "",
             linkedin: "",
             github: "",
@@ -290,7 +311,7 @@ export default class App extends Component {
             error: "",
             firstName: "",
             lastName: "",
-            grade: "freshman",
+            grade: "Freshman",
             resume: "",
             linkedin: "",
             github: "",
@@ -395,7 +416,8 @@ export default class App extends Component {
                       linkedin,
                       github,
                       resumeURL: url,
-                      school
+                      school,
+                      email: user.email
                     })
                     .then(() => {
                       this.setState({ loading: false });
@@ -759,7 +781,10 @@ export default class App extends Component {
                 apply={this.apply}
               />
             ) : (
-              <AllApplicants jobs={this.state.jobs} />
+              <AllApplicants
+                jobs={this.state.jobs}
+                loadApplicants={this.loadApplicants}
+              />
             )
           ) : (
             <LoginForm

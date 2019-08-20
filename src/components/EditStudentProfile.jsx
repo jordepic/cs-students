@@ -80,10 +80,10 @@ class EditStudentProfile extends Component {
                   onChange={event => this.props.handleUserInfoChange(event)}
                   defaultValue={this.props.grade}
                 >
-                  <option value="freshman">Freshman</option>
-                  <option value="sophomore">Sophomore</option>
-                  <option value="junior">Junior</option>
-                  <option value="senior">Senior</option>
+                  <option value="Freshman">Freshman</option>
+                  <option value="Sophomore">Sophomore</option>
+                  <option value="Junior">Junior</option>
+                  <option value="Senior">Senior</option>
                 </Form.Control>
                 <Form.Text
                   style={{

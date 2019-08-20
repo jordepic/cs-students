@@ -10,6 +10,7 @@ export default class AllApplicants extends Component {
         id={job.postKey}
         title={job.title}
         applicants={job.applicants}
+        loadApplicants={this.props.loadApplicants}
       />
     ));
     return (

@@ -3,7 +3,15 @@ import { Container, Row, Col, Table } from "react-bootstrap";
 import Applicant from "./Applicant";
 
 export default class ApplicantTable extends Component {
-  render() {
+  state = {
+    apps: []
+  };
+  constructor() {
+    super();
+    this.applicants = [];
+  }
+
+  componentWillMount() {
     var applicantIDS = [];
     if (this.props.applicants !== true) {
       for (var prop in this.props.applicants) {
@@ -12,8 +20,12 @@ export default class ApplicantTable extends Component {
         }
       }
     }
-    const applicants = applicantIDS.map(applicantID => (
-      <Applicant key={applicantID} id={applicantID} />
+    this.setState({ apps: this.props.loadApplicants(applicantIDS) });
+  }
+
+  render() {
+    this.applicants = this.state.apps.map(applicant => (
+      <Applicant applicant={applicant} />
     ));
     return (
       <div>
@@ -22,8 +34,7 @@ export default class ApplicantTable extends Component {
         <Table variant="dark">
           <thead>
             <tr>
-              <th>First Name</th>
-              <th>Last Name</th>
+              <th>Name</th>
               <th>Email</th>
               <th>University</th>
               <th>Grade</th>
@@ -32,7 +43,7 @@ export default class ApplicantTable extends Component {
               <th>Resume</th>
             </tr>
           </thead>
-          <tbody>{applicants}</tbody>
+          <tbody>{this.applicants}</tbody>
         </Table>
       </div>
     );
