@@ -625,7 +625,7 @@ export default class App extends Component {
                 companyURL: info.companyURL === null ? "" : info.companyURL,
                 companyPhotoURL:
                   info.companyPhotoURL === null ? "" : info.companyPhotoURL,
-                jobs: info.jobs === null ? [] : info.jobs
+                jobs
               });
             });
         }
@@ -777,7 +777,6 @@ export default class App extends Component {
             />
           )}
         </Row>
-        {/* {this.state.loading ? <div className="spinner-border"></div> : ""} */}
         <LoadingModal show={this.state.loading}></LoadingModal>
       </Container>
     );
