@@ -103,6 +103,7 @@ export default class App extends Component {
               }
               this.setState({
                 student: false,
+                registration: false,
                 loggedIn: true,
                 loading: false,
                 uid: user.uid,
@@ -114,9 +115,6 @@ export default class App extends Component {
               });
             }
           });
-        this.setState(prevState => {
-          return { loggedIn: true, loading: false };
-        });
       } else {
         this.setState({ loading: false });
       }
@@ -747,6 +745,7 @@ export default class App extends Component {
         <Row noGutters="true">
           <Col xl={true}>
             <Navbar
+              registration={this.state.registration}
               loggedIn={this.state.loggedIn}
               signOut={this.signOut}
               student={this.state.student}
@@ -764,7 +763,6 @@ export default class App extends Component {
               loadApplicants={this.loadApplicants}
               email={this.state.email}
               password={this.state.password}
-              registration={this.state.registration}
               handleAuthenticationTypeSwitch={
                 this.handleAuthenticationTypeSwitch
               }

@@ -60,7 +60,6 @@ class Navbar extends Component {
             ""
           )}
         </nav>
-
         <Route
           path="/profile"
           render={() =>
@@ -106,7 +105,18 @@ class Navbar extends Component {
               ""
             )
           }
-        />
+        />{" "}
+        {this.props.loggedIn ? (
+          this.props.registration ? (
+            <Redirect to="/profile" />
+          ) : this.props.student ? (
+            <Redirect to="/jobs" />
+          ) : (
+            <Redirect to="/applicants" />
+          )
+        ) : (
+          ""
+        )}
       </Router>
     );
   }
