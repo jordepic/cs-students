@@ -469,12 +469,6 @@ export default class App extends Component {
               job.companyName = companyName;
               job.companyURL = companyURL;
               job.companyPhotoURL = "";
-              job.applicants = true;
-              job.postKey = firebase
-                .database()
-                .ref()
-                .child("jobs")
-                .push().key;
               job.companyID = user.uid;
               updates["/jobs/" + job.postKey] = job;
             }
@@ -520,12 +514,6 @@ export default class App extends Component {
                     job.companyName = companyName;
                     job.companyURL = companyURL;
                     job.companyPhotoURL = this.state.companyPhotoURL;
-                    job.applicants = true;
-                    job.postKey = firebase
-                      .database()
-                      .ref()
-                      .child("jobs")
-                      .push().key;
                     job.companyID = user.uid;
                     updates["/jobs/" + job.postKey] = job;
                   }
@@ -815,5 +803,11 @@ class Job {
   constructor(title, description) {
     this.title = title;
     this.description = description;
+    this.applicants = true;
+    this.postKey = firebase
+      .database()
+      .ref()
+      .child("jobs")
+      .push().key;
   }
 }
