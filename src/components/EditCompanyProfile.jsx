@@ -14,7 +14,7 @@ class EditCompanyProfile extends Component {
     const jobs = this.props.jobs.map(job => (
       <React.Fragment>
         <EditJob
-          key={this.props.jobs.indexOf(job)}
+          key={job.postKey}
           id={this.props.jobs.indexOf(job)}
           title={job.title}
           description={job.description}
