@@ -41,7 +41,7 @@ class EditCompanyProfile extends Component {
                   name="companyName"
                   placeholder="Company Name"
                   onChange={event => this.props.handleUserInfoChange(event)}
-                  defaultValue={this.props.companyName}
+                  value={this.props.companyName}
                 />
                 <Form.Text
                   style={{
@@ -57,7 +57,7 @@ class EditCompanyProfile extends Component {
                   name="companyURL"
                   placeholder="Company URL"
                   onChange={event => this.props.handleUserInfoChange(event)}
-                  defaultValue={this.props.companyURL}
+                  value={this.props.companyURL}
                 />
                 <Form.Text
                   style={{

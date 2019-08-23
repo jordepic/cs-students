@@ -21,7 +21,7 @@ class EditJob extends Component {
                 onChange={event =>
                   this.props.handleJobListingChange(event, this.props.id)
                 }
-                defaultValue={this.props.title}
+                value={this.props.title}
               />
               <Form.Text
                 style={{
@@ -42,7 +42,7 @@ class EditJob extends Component {
                 }
                 as="textarea"
                 rows="5"
-                defaultValue={this.props.description}
+                value={this.props.description}
               />
               <Form.Text
                 style={{

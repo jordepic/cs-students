@@ -23,7 +23,7 @@ class EditStudentProfile extends Component {
                   name="firstName"
                   placeholder="First Name"
                   onChange={event => this.props.handleUserInfoChange(event)}
-                  defaultValue={this.props.firstName}
+                  value={this.props.firstName}
                 />
                 <Form.Text
                   style={{
@@ -40,7 +40,7 @@ class EditStudentProfile extends Component {
                   name="lastName"
                   placeholder="Last Name"
                   onChange={event => this.props.handleUserInfoChange(event)}
-                  defaultValue={this.props.lastName}
+                  value={this.props.lastName}
                 />
                 <Form.Text
                   style={{
@@ -57,7 +57,7 @@ class EditStudentProfile extends Component {
                   as="select"
                   name="school"
                   onChange={event => this.props.handleUserInfoChange(event)}
-                  defaultValue={this.props.school}
+                  value={this.props.school}
                 >
                   <option value="Yale">Yale</option>
                   <option value="Columbia">Columbia</option>

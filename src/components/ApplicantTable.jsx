@@ -1,5 +1,5 @@
 import React, { Component } from "react";
-import { Container, Row, Col, Table } from "react-bootstrap";
+import { Container, Row, Col, Table, Card } from "react-bootstrap";
 import Applicant from "./Applicant";
 
 export default class ApplicantTable extends Component {
@@ -30,21 +30,25 @@ export default class ApplicantTable extends Component {
     return (
       <div>
         <br />
-        <h3>{this.props.title}</h3>
-        <Table variant="dark">
-          <thead>
-            <tr>
-              <th>Name</th>
-              <th>Email</th>
-              <th>University</th>
-              <th>Grade</th>
-              <th>LinkedIn</th>
-              <th>GitHub</th>
-              <th>Resume</th>
-            </tr>
-          </thead>
-          <tbody>{this.applicants}</tbody>
-        </Table>
+        <Card>
+          <Card.Header>{this.props.title}</Card.Header>
+          <Card.Body>
+            <Table variant="dark">
+              <thead>
+                <tr>
+                  <th>Name</th>
+                  <th>Email</th>
+                  <th>University</th>
+                  <th>Grade</th>
+                  <th>LinkedIn</th>
+                  <th>GitHub</th>
+                  <th>Resume</th>
+                </tr>
+              </thead>
+              <tbody>{this.applicants}</tbody>
+            </Table>
+          </Card.Body>
+        </Card>
       </div>
     );
   }
