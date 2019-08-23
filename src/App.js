@@ -600,52 +600,66 @@ export default class App extends Component {
       .auth()
       .signInWithEmailAndPassword(email, password)
       .then(user => {
-        if (this.state.student) {
-          firebase
-            .database()
-            .ref("/students/" + user.user.uid)
-            .once("value")
-            .then(snapshot => {
-              var info = snapshot.val();
-              this.setState({
-                loggedIn: true,
-                loading: false,
-                uid: user.user.uid,
-                firstName: info.firstName === null ? "" : info.firstName,
-                lastName: info.lastName === null ? "" : info.lastName,
-                github: info.github === null ? "" : info.github,
-                linkedin: info.linkedin === null ? "" : info.linkedin,
-                resumeURL: info.resumeURL === null ? "" : info.resumeURL
-              });
-            });
-        } else {
-          firebase
-            .database()
-            .ref("/employers/" + user.user.uid)
-            .once("value")
-            .then(snapshot => {
-              var info = snapshot.val();
-              var jobs = [];
-              if (info.jobs !== null && info.jobs !== undefined) {
-                for (var prop in info.jobs) {
-                  if (Object.prototype.hasOwnProperty.call(info.jobs, prop)) {
-                    var job = info.jobs[prop];
-                    jobs.push(job);
+        firebase
+          .database()
+          .ref("/employers/" + user.user.uid)
+          .once("value")
+          .then(snapshot => {
+            if (snapshot.val() === null) {
+              this.setState({ student: true });
+            } else {
+              this.setState({ student: false });
+            }
+            if (this.state.student) {
+              firebase
+                .database()
+                .ref("/students/" + user.user.uid)
+                .once("value")
+                .then(snapshot => {
+                  var info = snapshot.val();
+                  this.setState({
+                    loggedIn: true,
+                    loading: false,
+                    uid: user.user.uid,
+                    firstName: info.firstName === null ? "" : info.firstName,
+                    lastName: info.lastName === null ? "" : info.lastName,
+                    github: info.github === null ? "" : info.github,
+                    linkedin: info.linkedin === null ? "" : info.linkedin,
+                    resumeURL: info.resumeURL === null ? "" : info.resumeURL
+                  });
+                });
+            } else {
+              firebase
+                .database()
+                .ref("/employers/" + user.user.uid)
+                .once("value")
+                .then(snapshot => {
+                  var info = snapshot.val();
+                  var jobs = [];
+                  if (info.jobs !== null && info.jobs !== undefined) {
+                    for (var prop in info.jobs) {
+                      if (
+                        Object.prototype.hasOwnProperty.call(info.jobs, prop)
+                      ) {
+                        var job = info.jobs[prop];
+                        jobs.push(job);
+                      }
+                    }
                   }
-                }
-              }
-              this.setState({
-                loggedIn: true,
-                loading: false,
-                uid: user.user.uid,
-                companyName: info.companyName === null ? "" : info.companyName,
-                companyURL: info.companyURL === null ? "" : info.companyURL,
-                companyPhotoURL:
-                  info.companyPhotoURL === null ? "" : info.companyPhotoURL,
-                jobs
-              });
-            });
-        }
+                  this.setState({
+                    loggedIn: true,
+                    loading: false,
+                    uid: user.user.uid,
+                    companyName:
+                      info.companyName === null ? "" : info.companyName,
+                    companyURL: info.companyURL === null ? "" : info.companyURL,
+                    companyPhotoURL:
+                      info.companyPhotoURL === null ? "" : info.companyPhotoURL,
+                    jobs
+                  });
+                });
+            }
+          });
       })
       .catch(error => {
         var errorCode = error.code;
