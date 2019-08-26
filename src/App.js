@@ -792,6 +792,7 @@ export default class App extends Component {
               handleAuthentication={this.handleAuthentication}
               handleUserSwitch={this.handleUserSwitch}
               error={this.state.error}
+              jobListings={this.state.jobListings}
             />
           </Col>
         </Row>

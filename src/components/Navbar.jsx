@@ -85,7 +85,7 @@ class Navbar extends Component {
             this.props.loggedIn ? (
               <JobScreen
                 loadJobListings={this.props.loadJobListings}
-                jobs={this.props.jobs}
+                jobs={this.props.jobListings}
                 apply={this.props.apply}
               />
             ) : (
